@@ -16,6 +16,7 @@ import * as path from 'path';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import { MulterDiskUploadedFiles } from '../types';
+import { ProductEntity } from './entities/product.entity';
 
 @Controller('/product')
 export class ProductController {
@@ -38,18 +39,18 @@ export class ProductController {
   createNewProduct(
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: MulterDiskUploadedFiles,
-  ): Promise<any> {
+  ): Promise<ProductEntity> {
     return this.productService.createNewProduct(createProductDto, files);
   }
 
   @Get('/')
-  findAll() {
-    return this.productService.findAll();
+  findAllProducts(): Promise<ProductEntity[]> {
+    return this.productService.findAllProducts();
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  findOneProduct(@Param('id') id: string): Promise<ProductEntity | null> {
+    return this.productService.findOneProduct(id);
   }
 
   @Patch('/:id')

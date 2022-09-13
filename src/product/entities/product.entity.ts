@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductInterface } from '../../types';
 import { ProductCategoryEntity } from '../../category/entities/category.entity';
+import { ProductInventoryEntity } from './product-inventory.entity';
 
 @Entity()
 export class ProductEntity extends BaseEntity implements ProductInterface {
@@ -32,12 +34,6 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
     scale: 2,
   })
   price: number;
-
-  @Column({
-    type: 'smallint',
-    unsigned: true,
-  })
-  quantity: number;
 
   @Column({
     length: 25,
@@ -70,4 +66,8 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
   @ManyToOne((type) => ProductCategoryEntity, (entity) => entity.productList)
   @JoinColumn()
   category: ProductCategoryEntity;
+
+  @OneToOne((type) => ProductInventoryEntity)
+  @JoinColumn()
+  quantity: ProductInventoryEntity;
 }

@@ -5,6 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import { MulterDiskUploadedFiles } from '../types';
 import { CategoryService } from '../category/category.service';
+import { ProductInventoryEntity } from './entities/product-inventory.entity';
 
 @Injectable()
 export class ProductService {
@@ -31,15 +32,20 @@ export class ProductService {
       productItem.name = createProductDto.name;
       productItem.description = createProductDto.description;
       productItem.price = createProductDto.price;
-      productItem.quantity = createProductDto.quantity;
+      //productItem.quantity = createProductDto.quantity;
       productItem.sku = createProductDto.sku;
+
+      const productInventory = new ProductInventoryEntity();
+      productInventory.quantity = createProductDto.quantity;
 
       if (photo) {
         productItem.photoFileName = photo.filename;
       }
 
       await productItem.save();
+      await productInventory.save();
 
+      productItem.quantity = productInventory;
       productItem.category = category;
 
       await productItem.save();
@@ -56,12 +62,21 @@ export class ProductService {
     }
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAllProducts(): Promise<ProductEntity[]> {
+    return await ProductEntity.find({
+      relations: ['quantity', 'category'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOneProduct(id: string): Promise<ProductEntity | null> {
+    const product = await ProductEntity.findOne({
+      where: {
+        id,
+      },
+      relations: ['quantity', 'category'],
+    });
+
+    return product !== null ? product : null;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {

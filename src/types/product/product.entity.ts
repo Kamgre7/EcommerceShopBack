@@ -3,10 +3,16 @@ export interface ProductInterface {
   name: string;
   description: string;
   price: number;
-  quantity: number;
   sku: string;
   boughtCounter: number;
   photoFileName: string;
+  createdAt: Date;
+  modifiedAt: Date;
+}
+
+export interface ProductInventoryInterface {
+  id: string;
+  quantity: number;
   createdAt: Date;
   modifiedAt: Date;
 }
