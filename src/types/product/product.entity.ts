@@ -4,8 +4,10 @@ export interface ProductInterface {
   description: string;
   price: number;
   quantity: number;
-  boughtCount: number;
-  createAt: Date;
+  boughtCounter: number;
+  photoFileName: string;
+  createdAt: Date;
+  modifiedAt: Date;
 }
 
 export interface MulterDiskUploadedFiles {
