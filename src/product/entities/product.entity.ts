@@ -67,7 +67,10 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
   @JoinColumn()
   category: ProductCategoryEntity;
 
-  @OneToOne((type) => ProductInventoryEntity)
+  @OneToOne((type) => ProductInventoryEntity, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   quantity: ProductInventoryEntity;
 }

@@ -32,6 +32,6 @@ export class ProductInventoryEntity
   })
   modifiedAt: Date;
 
-  @OneToOne((type) => ProductEntity)
+  @OneToOne((type) => ProductEntity, { onDelete: 'CASCADE' })
   product: ProductEntity;
 }

@@ -17,6 +17,10 @@ export interface ProductInventoryInterface {
   modifiedAt: Date;
 }
 
+export interface RemoveProductResponse {
+  isSuccess: boolean;
+}
+
 export interface ProductFilterResponse {
   id: string;
   name: string;

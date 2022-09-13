@@ -1,9 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+// import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
-import { MulterDiskUploadedFiles } from '../types';
+import { MulterDiskUploadedFiles, RemoveProductResponse } from '../types';
 import { CategoryService } from '../category/category.service';
 import { ProductInventoryEntity } from './entities/product-inventory.entity';
 
@@ -32,7 +32,6 @@ export class ProductService {
       productItem.name = createProductDto.name;
       productItem.description = createProductDto.description;
       productItem.price = createProductDto.price;
-      //productItem.quantity = createProductDto.quantity;
       productItem.sku = createProductDto.sku;
 
       const productInventory = new ProductInventoryEntity();
@@ -79,11 +78,35 @@ export class ProductService {
     return product !== null ? product : null;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  /*  update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
-  }
+  }*/
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async removeProduct(id: string): Promise<RemoveProductResponse> {
+    const product = await ProductEntity.findOne({
+      where: {
+        id,
+      },
+      relations: ['quantity'],
+    });
+
+    const productInventory = await ProductInventoryEntity.findOne({
+      where: {
+        id: product.quantity.id,
+      },
+    });
+
+    if (!product || !productInventory) {
+      return {
+        isSuccess: false,
+      };
+    }
+
+    await product.remove();
+    await productInventory.remove();
+
+    return {
+      isSuccess: true,
+    };
   }
 }
