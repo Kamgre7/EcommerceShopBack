@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ProductModule } from './product/product.module';
     }),
     forwardRef(() => DatabaseModule),
     forwardRef(() => ProductModule),
+    forwardRef(() => CategoryModule),
   ],
   controllers: [AppController],
   providers: [AppService],
