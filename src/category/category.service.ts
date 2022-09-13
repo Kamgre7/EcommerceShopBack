@@ -10,7 +10,7 @@ export class CategoryService {
   async createCategory(
     createCategoryDto: CreateCategoryDto,
     files: MulterDiskUploadedFiles,
-  ): Promise<any> {
+  ): Promise<ProductCategoryEntity> {
     const photo = files?.photo?.[0] ?? null;
 
     try {
@@ -36,11 +36,11 @@ export class CategoryService {
     }
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll(): Promise<ProductCategoryEntity[]> {
+    return await ProductCategoryEntity.find();
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<ProductCategoryEntity | null> {
     const category = await ProductCategoryEntity.findOne({
       where: { id },
     });
@@ -51,11 +51,11 @@ export class CategoryService {
     return category;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  /*  update(id: string, updateCategoryDto: UpdateCategoryDto) {
     return `This action updates a #${id} category`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
-  }
+  async remove(id: string): Promise<any> {
+    return await ProductCategoryEntity.delete(id);
+  }*/
 }

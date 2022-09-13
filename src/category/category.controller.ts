@@ -16,6 +16,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import * as path from 'path';
 import { MulterDiskUploadedFiles } from '../types';
+import { ProductCategoryEntity } from './entities/category.entity';
 
 @Controller('/category')
 export class CategoryController {
@@ -43,25 +44,25 @@ export class CategoryController {
   }
 
   @Get('/')
-  findAll() {
+  findAllCategories(): Promise<ProductCategoryEntity[]> {
     return this.categoryService.findAll();
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string) {
+  findOneCategory(@Param('id') id: string): Promise<ProductCategoryEntity> {
     return this.categoryService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
+  /*  @Patch(':id')
+  updateCategory(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.update(id, updateCategoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
-  }
+  removeCategory(@Param('id') id: string) {
+    return this.categoryService.remove(id);
+  }*/
 }
