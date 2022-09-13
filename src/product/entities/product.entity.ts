@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ProductInterface } from '../../types';
 
 @Entity()
-export class Product extends BaseEntity implements ProductInterface {
+export class ProductEntity extends BaseEntity implements ProductInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -32,6 +32,11 @@ export class Product extends BaseEntity implements ProductInterface {
   quantity: number;
 
   @Column({
+    length: 25,
+  })
+  sku: string;
+
+  @Column({
     type: 'int',
     unsigned: true,
     default: 0,
@@ -43,6 +48,11 @@ export class Product extends BaseEntity implements ProductInterface {
     nullable: true,
   })
   photoFileName: string;
+
+  @Column({
+    length: 25,
+  })
+  category: string;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',
