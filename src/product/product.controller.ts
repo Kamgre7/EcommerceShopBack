@@ -12,10 +12,10 @@ import {
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { MulterDiskUploadedFiles } from '../types';
 import * as path from 'path';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
+import { MulterDiskUploadedFiles } from '../types';
 
 @Controller('/product')
 export class ProductController {

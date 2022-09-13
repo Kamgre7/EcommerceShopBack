@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { MulterDiskUploadedFiles /*, ProductFilterResponse*/ } from '../types';
 import { ProductEntity } from './entities/product.entity';
+import { MulterDiskUploadedFiles } from '../types';
 
 @Injectable()
 export class ProductService {
