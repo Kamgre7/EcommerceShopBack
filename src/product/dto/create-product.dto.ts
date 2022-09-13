@@ -2,6 +2,7 @@ import {
   IsInt,
   IsNumber,
   IsString,
+  IsUUID,
   Max,
   MaxLength,
   Min,
@@ -16,6 +17,7 @@ export class CreateProductDto {
 
   @IsNumber()
   @Min(0.1)
+  @Max(999999)
   price: number;
 
   @IsInt()
@@ -28,7 +30,7 @@ export class CreateProductDto {
   @MaxLength(25)
   sku: string;
 
-  @IsString()
+  @IsUUID(4)
   categoryId: string;
 
   @IsString()

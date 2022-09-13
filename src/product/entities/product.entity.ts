@@ -4,12 +4,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductInterface } from '../../types';
 import { ProductCategoryEntity } from '../../category/entities/category.entity';
 import { ProductInventoryEntity } from './product-inventory.entity';
+import { BasketEntity } from '../../basket/entities/basket.entity';
 
 @Entity()
 export class ProductEntity extends BaseEntity implements ProductInterface {
@@ -63,14 +65,17 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
   })
   modifiedAt: Date;
 
-  @ManyToOne((type) => ProductCategoryEntity, (entity) => entity.productList)
+  @ManyToOne(() => ProductCategoryEntity, (entity) => entity.productList)
   @JoinColumn()
   category: ProductCategoryEntity;
 
-  @OneToOne((type) => ProductInventoryEntity, {
+  @OneToOne(() => ProductInventoryEntity, {
     eager: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn()
   quantity: ProductInventoryEntity;
+
+  @OneToMany(() => BasketEntity, (entity) => entity.product)
+  itemsInBasket: BasketEntity[];
 }
