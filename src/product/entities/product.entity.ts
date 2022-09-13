@@ -1,5 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ProductInterface } from '../../types';
+import { ProductCategoryEntity } from '../../category/entities/category.entity';
 
 @Entity()
 export class ProductEntity extends BaseEntity implements ProductInterface {
@@ -50,11 +58,6 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
   photoFileName: string;
 
   @Column({
-    length: 25,
-  })
-  category: string;
-
-  @Column({
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
@@ -63,4 +66,8 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
     default: () => 'CURRENT_TIMESTAMP',
   })
   modifiedAt: Date;
+
+  @ManyToOne((type) => ProductCategoryEntity, (entity) => entity.productList)
+  @JoinColumn()
+  category: ProductCategoryEntity;
 }

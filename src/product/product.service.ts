@@ -1,21 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import { MulterDiskUploadedFiles } from '../types';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class ProductService {
-  /* responseFilter(productItem): ProductFilterResponse {
-
-  }*/
+  constructor(
+    @Inject(forwardRef(() => CategoryService))
+    private categoryService: CategoryService,
+  ) {}
 
   async createNewProduct(
     createProductDto: CreateProductDto,
     files: MulterDiskUploadedFiles,
   ): Promise<any> {
     const photo = files?.photo?.[0] ?? null;
+    const category = await this.categoryService.findOne(
+      createProductDto.categoryId,
+    );
+
+    if (!category) {
+      return { isSuccess: false };
+    }
 
     try {
       const productItem = new ProductEntity();
@@ -24,11 +33,14 @@ export class ProductService {
       productItem.price = createProductDto.price;
       productItem.quantity = createProductDto.quantity;
       productItem.sku = createProductDto.sku;
-      productItem.category = createProductDto.category;
 
       if (photo) {
         productItem.photoFileName = photo.filename;
       }
+
+      await productItem.save();
+
+      productItem.category = category;
 
       await productItem.save();
 

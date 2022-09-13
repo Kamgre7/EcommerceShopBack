@@ -1,5 +1,12 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ProductCategoryInterface } from '../../types';
+import { ProductEntity } from '../../product/entities/product.entity';
 
 @Entity()
 export class ProductCategoryEntity
@@ -36,4 +43,7 @@ export class ProductCategoryEntity
     default: () => 'CURRENT_TIMESTAMP',
   })
   modifiedAt: Date;
+
+  @OneToMany((type) => ProductEntity, (entity) => entity.category)
+  productList: ProductEntity[];
 }

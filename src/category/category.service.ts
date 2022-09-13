@@ -7,7 +7,7 @@ import { ProductCategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
-  async create(
+  async createCategory(
     createCategoryDto: CreateCategoryDto,
     files: MulterDiskUploadedFiles,
   ): Promise<any> {
@@ -40,8 +40,15 @@ export class CategoryService {
     return `This action returns all category`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string) {
+    const category = await ProductCategoryEntity.findOne({
+      where: { id },
+    });
+
+    if (!category) {
+      return null;
+    }
+    return category;
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {

@@ -35,11 +35,11 @@ export class CategoryController {
       },
     ),
   )
-  create(
+  createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
     @UploadedFiles() files: MulterDiskUploadedFiles,
   ): Promise<any> {
-    return this.categoryService.create(createCategoryDto, files);
+    return this.categoryService.createCategory(createCategoryDto, files);
   }
 
   @Get('/')
@@ -47,9 +47,9 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+    return this.categoryService.findOne(id);
   }
 
   @Patch(':id')

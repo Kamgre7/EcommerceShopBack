@@ -29,7 +29,7 @@ export class CreateProductDto {
   sku: string;
 
   @IsString()
-  category: string;
+  categoryId: string;
 
   @IsString()
   @MinLength(3)
