@@ -10,6 +10,8 @@ import {
 
 export class CreateProductDto {
   @IsString()
+  @MinLength(3)
+  @MaxLength(25)
   name: string;
 
   @IsNumber()
@@ -22,6 +24,8 @@ export class CreateProductDto {
   quantity: number;
 
   @IsString()
+  @MinLength(3)
+  @MaxLength(25)
   sku: string;
 
   @IsString()

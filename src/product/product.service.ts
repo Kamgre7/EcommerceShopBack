@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { MulterDiskUploadedFiles } from '../types';
 
 @Injectable()
 export class ProductService {
-  createNewProduct(createProductDto: CreateProductDto) {
-    console.log(createProductDto);
-    return 'This action adds a new product';
+  async createNewProduct(
+    createProductDto: CreateProductDto,
+    files: MulterDiskUploadedFiles,
+  ): Promise<any> {
+    const photo = files?.photo?.[0] ?? null;
+
+    return {
+      ...createProductDto,
+      photo,
+    };
   }
 
   findAll() {

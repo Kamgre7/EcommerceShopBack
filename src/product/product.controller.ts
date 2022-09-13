@@ -6,18 +6,40 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { MulterDiskUploadedFiles } from '../types';
+import * as path from 'path';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { multerStorage, storageDir } from '../utils/storage';
 
 @Controller('/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('/')
-  createNewProduct(@Body() createProductDto: CreateProductDto) {
-    return this.productService.createNewProduct(createProductDto);
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'photo',
+          maxCount: 1,
+        },
+      ],
+      {
+        storage: multerStorage(path.join(storageDir(), 'product-photo')),
+      },
+    ),
+  )
+  createNewProduct(
+    @Body() createProductDto: CreateProductDto,
+    @UploadedFiles() files: MulterDiskUploadedFiles,
+  ): Promise<any> {
+    return this.productService.createNewProduct(createProductDto, files);
   }
 
   @Get('/')
