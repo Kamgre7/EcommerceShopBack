@@ -13,22 +13,25 @@ import {
 import { CategoryService } from '../category/category.service';
 import { ProductInventoryEntity } from './entities/product-inventory.entity';
 import { productFilter } from '../utils/productFilter';
+import { BasketService } from '../basket/basket.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @Inject(forwardRef(() => CategoryService))
     private categoryService: CategoryService,
+    @Inject(forwardRef(() => BasketService))
+    private basketService: BasketService,
   ) {}
 
   async createNewProduct(
     createProductDto: CreateProductDto,
     files: MulterDiskUploadedFiles,
   ): Promise<CreateProductResponse> {
+    const { name, sku, price, quantity, description, categoryId } =
+      createProductDto;
     const photo = files?.photo?.[0] ?? null;
-    const category = await this.categoryService.findOneCategory(
-      createProductDto.categoryId,
-    );
+    const category = await this.categoryService.findOneCategory(categoryId);
 
     if (!category) {
       return { isSuccess: false };
@@ -36,13 +39,13 @@ export class ProductService {
 
     try {
       const productItem = new ProductEntity();
-      productItem.name = createProductDto.name;
-      productItem.description = createProductDto.description;
-      productItem.price = createProductDto.price;
-      productItem.sku = createProductDto.sku;
+      productItem.name = name;
+      productItem.description = description;
+      productItem.price = price;
+      productItem.sku = sku;
 
       const productInventory = new ProductInventoryEntity();
-      productInventory.quantity = createProductDto.quantity;
+      productInventory.quantity = quantity;
 
       if (photo) {
         productItem.photoFileName = photo.filename;
@@ -76,7 +79,7 @@ export class ProductService {
     return products.map((product) => productFilter(product));
   }
 
-  async findOneProduct(id: string): Promise<FindOneProductResponse> {
+  async findOneProduct(id: string): Promise<ProductEntity | null> {
     const product = await ProductEntity.findOne({
       where: {
         id,
@@ -84,7 +87,7 @@ export class ProductService {
       relations: ['productInventory', 'category'],
     });
 
-    return product !== null ? productFilter(product) : null;
+    return product !== null ? product : null;
   }
 
   async findBestSoldProduct(): Promise<ProductFilterResponse[]> {

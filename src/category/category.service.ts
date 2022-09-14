@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CategoryFilterResponse, MulterDiskUploadedFiles } from '../types';
+import {
+  CategoryFilterResponse,
+  CreateCategoryResponse,
+  MulterDiskUploadedFiles,
+} from '../types';
 import * as fs from 'fs';
 import { ProductCategoryEntity } from './entities/category.entity';
 import { categoryFilter } from '../utils/categoryFilter';
@@ -11,13 +15,24 @@ export class CategoryService {
   async createCategory(
     createCategoryDto: CreateCategoryDto,
     files: MulterDiskUploadedFiles,
-  ): Promise<CategoryFilterResponse> {
+  ): Promise<CreateCategoryResponse> {
+    const { name, description } = createCategoryDto;
     const photo = files?.photo?.[0] ?? null;
+
+    const duplicatedCategory = await ProductCategoryEntity.findOne({
+      where: {
+        name,
+      },
+    });
+
+    if (duplicatedCategory) {
+      return { isSuccess: false };
+    }
 
     try {
       const category = new ProductCategoryEntity();
-      category.name = createCategoryDto.name;
-      category.description = createCategoryDto.description;
+      category.name = name;
+      category.description = description;
 
       if (photo) {
         category.photoFileName = photo.filename;
@@ -47,10 +62,7 @@ export class CategoryService {
       where: { id },
     });
 
-    if (!category) {
-      return null;
-    }
-    return category;
+    return !category ? null : category;
   }
 
   /*  update(id: string, updateCategoryDto: UpdateCategoryDto) {

@@ -7,9 +7,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductEntity } from '../../product/entities/product.entity';
+import { BasketInterface } from '../../types';
 
 @Entity()
-export class BasketEntity extends BaseEntity {
+export class BasketEntity extends BaseEntity implements BasketInterface {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

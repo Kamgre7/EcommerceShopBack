@@ -9,25 +9,28 @@ import {
 } from '@nestjs/common';
 import { BasketService } from './basket.service';
 import { CreateBasketDto } from './dto/create-basket.dto';
+import { AddToBasketResponse } from '../types';
 
 @Controller('/basket')
 export class BasketController {
   constructor(private readonly basketService: BasketService) {}
 
   @Post('/')
-  addToBasket(@Body() createBasketDto: CreateBasketDto) {
+  addToBasket(
+    @Body() createBasketDto: CreateBasketDto,
+  ): Promise<AddToBasketResponse> {
     return this.basketService.addToBasket(createBasketDto);
   }
 
-  @Get('/:id')
-  showBasket(@Param('id') id: string) {
-    return this.basketService.showBasket(id);
+  @Get(/*'/:id'*/)
+  showBasket(/*@Param('id') id: string*/) {
+    return this.basketService.showBasket(/*id*/);
   }
 
-  /* @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBasketDto: UpdateBasketDto) {
-    return this.basketService.update(+id, updateBasketDto);
-  }*/
+  @Get('/total-price' /*/total-price/:id*/)
+  getTotalPrice(/*@Param('id') id: string*/) {
+    return this.basketService.getTotalPrice(/*id*/);
+  }
 
   @Delete('/all/:id')
   clearBasket(@Param('id') id: string) {

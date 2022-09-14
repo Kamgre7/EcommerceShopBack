@@ -22,6 +22,7 @@ import {
   ProductFilterResponse,
   RemoveProductResponse,
 } from '../types';
+import { ProductEntity } from './entities/product.entity';
 
 @Controller('/product')
 export class ProductController {
@@ -59,7 +60,7 @@ export class ProductController {
   }
 
   @Get('/:id')
-  findOneProduct(@Param('id') id: string): Promise<FindOneProductResponse> {
+  findOneProduct(@Param('id') id: string): Promise<ProductEntity | null> {
     return this.productService.findOneProduct(id);
   }
 

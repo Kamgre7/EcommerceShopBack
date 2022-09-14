@@ -14,4 +14,8 @@ export interface CategoryFilterResponse {
   photoFileName: string;
 }
 
-export type FindOneCategoryResponse = CategoryFilterResponse | null;
+export type CreateCategoryResponse =
+  | {
+      isSuccess: false;
+    }
+  | CategoryFilterResponse;

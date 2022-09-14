@@ -15,7 +15,11 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import * as path from 'path';
-import { CategoryFilterResponse, MulterDiskUploadedFiles } from '../types';
+import {
+  CategoryFilterResponse,
+  CreateCategoryResponse,
+  MulterDiskUploadedFiles,
+} from '../types';
 import { ProductCategoryEntity } from './entities/category.entity';
 
 @Controller('/category')
@@ -39,7 +43,7 @@ export class CategoryController {
   createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
     @UploadedFiles() files: MulterDiskUploadedFiles,
-  ): Promise<CategoryFilterResponse> {
+  ): Promise<CreateCategoryResponse> {
     return this.categoryService.createCategory(createCategoryDto, files);
   }
 
