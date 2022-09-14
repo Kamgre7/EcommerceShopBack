@@ -15,8 +15,12 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import * as path from 'path';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
-import { MulterDiskUploadedFiles } from '../types';
-import { ProductEntity } from './entities/product.entity';
+import {
+  CreateProductResponse,
+  MulterDiskUploadedFiles,
+  ProductFilterResponse,
+  RemoveProductResponse,
+} from '../types';
 
 @Controller('/product')
 export class ProductController {
@@ -39,17 +43,24 @@ export class ProductController {
   createNewProduct(
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: MulterDiskUploadedFiles,
-  ): Promise<ProductEntity> {
+  ): Promise<CreateProductResponse> {
     return this.productService.createNewProduct(createProductDto, files);
   }
 
   @Get('/')
-  findAllProducts(): Promise<ProductEntity[]> {
+  findAllProducts(): Promise<ProductFilterResponse[]> {
     return this.productService.findAllProducts();
   }
 
+  @Get('/ranking')
+  findBestSoldProduct(): Promise<ProductFilterResponse[]> {
+    return this.productService.findBestSoldProduct();
+  }
+
   @Get('/:id')
-  findOneProduct(@Param('id') id: string): Promise<ProductEntity | null> {
+  findOneProduct(
+    @Param('id') id: string,
+  ): Promise<ProductFilterResponse | null> {
     return this.productService.findOneProduct(id);
   }
 
@@ -59,7 +70,7 @@ export class ProductController {
   }*/
 
   @Delete('/:id')
-  removeProduct(@Param('id') id: string) {
+  removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
     return this.productService.removeProduct(id);
   }
 }

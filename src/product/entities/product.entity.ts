@@ -74,7 +74,7 @@ export class ProductEntity extends BaseEntity implements ProductInterface {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  quantity: ProductInventoryEntity;
+  productInventory: ProductInventoryEntity;
 
   @OneToMany(() => BasketEntity, (entity) => entity.product)
   itemsInBasket: BasketEntity[];

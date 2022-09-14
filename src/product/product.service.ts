@@ -3,9 +3,15 @@ import * as fs from 'fs';
 import { CreateProductDto } from './dto/create-product.dto';
 // import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
-import { MulterDiskUploadedFiles, RemoveProductResponse } from '../types';
+import {
+  CreateProductResponse,
+  MulterDiskUploadedFiles,
+  ProductFilterResponse,
+  RemoveProductResponse,
+} from '../types';
 import { CategoryService } from '../category/category.service';
 import { ProductInventoryEntity } from './entities/product-inventory.entity';
+import { productFilter } from '../utils/dataFilter';
 
 @Injectable()
 export class ProductService {
@@ -17,7 +23,7 @@ export class ProductService {
   async createNewProduct(
     createProductDto: CreateProductDto,
     files: MulterDiskUploadedFiles,
-  ): Promise<any> {
+  ): Promise<CreateProductResponse> {
     const photo = files?.photo?.[0] ?? null;
     const category = await this.categoryService.findOne(
       createProductDto.categoryId,
@@ -44,12 +50,12 @@ export class ProductService {
       await productItem.save();
       await productInventory.save();
 
-      productItem.quantity = productInventory;
+      productItem.productInventory = productInventory;
       productItem.category = category;
 
       await productItem.save();
 
-      return productItem;
+      return productFilter(productItem);
     } catch (e) {
       try {
         if (photo) {
@@ -61,21 +67,35 @@ export class ProductService {
     }
   }
 
-  async findAllProducts(): Promise<ProductEntity[]> {
-    return await ProductEntity.find({
-      relations: ['quantity', 'category'],
+  async findAllProducts(): Promise<ProductFilterResponse[]> {
+    const products = await ProductEntity.find({
+      relations: ['productInventory', 'category'],
     });
+
+    return products.map((product) => productFilter(product));
   }
 
-  async findOneProduct(id: string): Promise<ProductEntity | null> {
+  async findOneProduct(id: string): Promise<ProductFilterResponse | null> {
     const product = await ProductEntity.findOne({
       where: {
         id,
       },
-      relations: ['quantity', 'category'],
+      relations: ['productInventory', 'category'],
     });
 
-    return product !== null ? product : null;
+    return product !== null ? productFilter(product) : null;
+  }
+
+  async findBestSoldProduct(): Promise<ProductFilterResponse[]> {
+    const topProducts = await ProductEntity.find({
+      order: {
+        boughtCounter: 'DESC',
+      },
+      skip: 0,
+      take: 2,
+    });
+
+    return topProducts.map((product) => productFilter(product));
   }
 
   /*  update(id: number, updateProductDto: UpdateProductDto) {
@@ -92,7 +112,7 @@ export class ProductService {
 
     const productInventory = await ProductInventoryEntity.findOne({
       where: {
-        id: product.quantity.id,
+        id: product.productInventory.id,
       },
     });
 

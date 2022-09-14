@@ -28,4 +28,12 @@ export interface ProductFilterResponse {
   quantity: number;
   description: string;
   sku: string;
+  boughtCounter: number;
+  photoFileName: string;
 }
+
+export type CreateProductResponse =
+  | {
+      isSuccess: false;
+    }
+  | ProductFilterResponse;
