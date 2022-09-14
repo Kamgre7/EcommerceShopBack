@@ -19,3 +19,7 @@ export interface BasketFilterResponse {
   quantity: number;
   product: ProductFilterResponse;
 }
+
+export interface RemoveProductFromBasket {
+  isSuccess: boolean;
+}

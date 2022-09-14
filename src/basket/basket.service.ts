@@ -2,7 +2,11 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateBasketDto } from './dto/create-basket.dto';
 import { ProductService } from '../product/product.service';
 import { BasketEntity } from './entities/basket.entity';
-import { AddToBasketResponse, BasketFilterResponse } from '../types';
+import {
+  AddToBasketResponse,
+  BasketFilterResponse,
+  RemoveProductFromBasket,
+} from '../types';
 import { basketFilter } from '../utils/basketFilter';
 
 @Injectable()
@@ -32,7 +36,7 @@ export class BasketService {
     return { isSuccess: true, id: basket.id };
   }
 
-  async showBasket(/*id: string*/) {
+  async showBasket(/*id: string*/): Promise<BasketFilterResponse[]> {
     const items: BasketFilterResponse[] = (
       await BasketEntity.find({
         relations: ['product'],
@@ -72,8 +76,19 @@ export class BasketService {
   }
 */
 
-  removeItem(id: string) {
-    return `This action removes a #${id} basket`;
+  async removeItem(id: string): Promise<RemoveProductFromBasket> {
+    const basketItem = await BasketEntity.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!basketItem) {
+      return { isSuccess: false };
+    }
+
+    await basketItem.remove();
+    return { isSuccess: true };
   }
 
   clearBasket(id: string) {
