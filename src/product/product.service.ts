@@ -5,13 +5,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import {
   CreateProductResponse,
+  FindOneProductResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
   RemoveProductResponse,
 } from '../types';
 import { CategoryService } from '../category/category.service';
 import { ProductInventoryEntity } from './entities/product-inventory.entity';
-import { productFilter } from '../utils/dataFilter';
+import { productFilter } from '../utils/productFilter';
 
 @Injectable()
 export class ProductService {
@@ -25,7 +26,7 @@ export class ProductService {
     files: MulterDiskUploadedFiles,
   ): Promise<CreateProductResponse> {
     const photo = files?.photo?.[0] ?? null;
-    const category = await this.categoryService.findOne(
+    const category = await this.categoryService.findOneCategory(
       createProductDto.categoryId,
     );
 
@@ -75,7 +76,7 @@ export class ProductService {
     return products.map((product) => productFilter(product));
   }
 
-  async findOneProduct(id: string): Promise<ProductFilterResponse | null> {
+  async findOneProduct(id: string): Promise<FindOneProductResponse> {
     const product = await ProductEntity.findOne({
       where: {
         id,

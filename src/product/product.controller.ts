@@ -17,6 +17,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import {
   CreateProductResponse,
+  FindOneProductResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
   RemoveProductResponse,
@@ -58,9 +59,7 @@ export class ProductController {
   }
 
   @Get('/:id')
-  findOneProduct(
-    @Param('id') id: string,
-  ): Promise<ProductFilterResponse | null> {
+  findOneProduct(@Param('id') id: string): Promise<FindOneProductResponse> {
     return this.productService.findOneProduct(id);
   }
 

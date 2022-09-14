@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { MulterDiskUploadedFiles } from '../types';
+import { CategoryFilterResponse, MulterDiskUploadedFiles } from '../types';
 import * as fs from 'fs';
 import { ProductCategoryEntity } from './entities/category.entity';
+import { categoryFilter } from '../utils/categoryFilter';
 
 @Injectable()
 export class CategoryService {
   async createCategory(
     createCategoryDto: CreateCategoryDto,
     files: MulterDiskUploadedFiles,
-  ): Promise<ProductCategoryEntity> {
+  ): Promise<CategoryFilterResponse> {
     const photo = files?.photo?.[0] ?? null;
 
     try {
@@ -24,7 +25,7 @@ export class CategoryService {
 
       await category.save();
 
-      return category;
+      return categoryFilter(category);
     } catch (e) {
       try {
         if (photo) {
@@ -36,11 +37,12 @@ export class CategoryService {
     }
   }
 
-  async findAll(): Promise<ProductCategoryEntity[]> {
-    return await ProductCategoryEntity.find();
+  async findAllCategories(): Promise<CategoryFilterResponse[]> {
+    const categories = await ProductCategoryEntity.find();
+    return categories.map((category) => categoryFilter(category));
   }
 
-  async findOne(id: string): Promise<ProductCategoryEntity | null> {
+  async findOneCategory(id: string): Promise<ProductCategoryEntity | null> {
     const category = await ProductCategoryEntity.findOne({
       where: { id },
     });

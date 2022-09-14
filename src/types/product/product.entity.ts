@@ -37,3 +37,5 @@ export type CreateProductResponse =
       isSuccess: false;
     }
   | ProductFilterResponse;
+
+export type FindOneProductResponse = ProductFilterResponse | null;
