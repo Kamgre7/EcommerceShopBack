@@ -7,6 +7,7 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { BasketModule } from './basket/basket.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { UserModule } from './user/user.module';
     forwardRef(() => ProductModule),
     forwardRef(() => CategoryModule),
     forwardRef(() => BasketModule),
-    UserModule,
+    forwardRef(() => UserModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [AppController],
   providers: [AppService],
