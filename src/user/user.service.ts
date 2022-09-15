@@ -4,11 +4,35 @@ import { UserEntity } from './entities/user.entity';
 import { hashPassword, randomSalt } from '../utils/hash-password';
 import { UserAddressEntity } from './entities/user-address.entity';
 import { CreateUserAddressDto } from './dto/create-user-address.dto';
-import { userAddressFilter } from '../utils/userFilter';
+import { userAddressFilter, userFilter } from '../utils/user-filter';
+import {
+  CreateUserAddressResponse,
+  RegisterUserResponse,
+  UserAddressResponse,
+} from '../types';
 
 @Injectable()
 export class UserService {
-  async createUser(createUserDto: CreateUserDto) {
+  private static async createUserAddress(
+    { city, address, country, mobilePhone, postalCode }: CreateUserAddressDto,
+    user: UserEntity,
+  ) {
+    const newUserAddress = new UserAddressEntity();
+    newUserAddress.address = address;
+    newUserAddress.city = city;
+    newUserAddress.country = country;
+    newUserAddress.mobilePhone = mobilePhone;
+    newUserAddress.postalCode = postalCode;
+
+    await newUserAddress.save();
+
+    newUserAddress.user = user;
+    await newUserAddress.save();
+  }
+
+  async createUser(
+    createUserDto: CreateUserDto,
+  ): Promise<RegisterUserResponse> {
     const {
       firstName,
       lastName,
@@ -42,28 +66,18 @@ export class UserService {
 
     await newUser.save();
 
-    const newUserAddress = new UserAddressEntity();
-    newUserAddress.address = address;
-    newUserAddress.city = city;
-    newUserAddress.country = country;
-    newUserAddress.mobilePhone = mobilePhone;
-    newUserAddress.postalCode = postalCode;
+    await UserService.createUserAddress(
+      { city, address, country, mobilePhone, postalCode },
+      newUser,
+    );
 
-    await newUserAddress.save();
-
-    newUserAddress.user = newUser;
-    await newUserAddress.save();
-
-    return { id: newUser.id, email: newUser.email };
+    return userFilter(newUser);
   }
 
-  async createUserAddress(
+  async createAdditionalUserAddress(
     createUserAddressDto: CreateUserAddressDto,
     userId: string,
-  ) {
-    const { city, address, country, mobilePhone, postalCode } =
-      createUserAddressDto;
-
+  ): Promise<CreateUserAddressResponse> {
     const user = await UserEntity.findOne({
       where: {
         id: userId,
@@ -74,25 +88,15 @@ export class UserService {
       return { isSuccess: false };
     }
 
-    const newUserAddress = new UserAddressEntity();
-    newUserAddress.address = address;
-    newUserAddress.city = city;
-    newUserAddress.country = country;
-    newUserAddress.mobilePhone = mobilePhone;
-    newUserAddress.postalCode = postalCode;
-
-    await newUserAddress.save();
-
-    newUserAddress.user = user;
-    await newUserAddress.save();
+    await UserService.createUserAddress(createUserAddressDto, user);
 
     return { isSuccess: true };
   }
 
-  async findUserAddress(id: string) {
+  async findUserAddress(id: string): Promise<UserAddressResponse[]> {
     const user = await UserEntity.findOne({
       where: {
-        id: 'f7d5df5e-d62e-4fd8-bff7-0f5353b216a6',
+        id,
       },
       relations: ['address'],
     });

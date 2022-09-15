@@ -25,7 +25,10 @@ export class UserController {
     @Body() createUserAddressDto: CreateUserAddressDto,
     @Param('userId') userId: string,
   ) {
-    return this.userService.createUserAddress(createUserAddressDto, userId);
+    return this.userService.createAdditionalUserAddress(
+      createUserAddressDto,
+      userId,
+    );
   }
 
   @Get('/address/:userId')

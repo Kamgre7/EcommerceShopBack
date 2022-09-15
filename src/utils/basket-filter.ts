@@ -1,5 +1,5 @@
 import { BasketEntity } from '../basket/entities/basket.entity';
-import { productFilter } from './productFilter';
+import { productFilter } from './product-filter';
 import { BasketFilterResponse } from '../types';
 
 export const basketFilter = (

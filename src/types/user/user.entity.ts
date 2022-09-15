@@ -19,4 +19,19 @@ export interface UserAddressInterface {
   mobilePhone: number;
 }
 
+export interface UserFilterResponse {
+  id: string;
+  email: string;
+}
+
+export type RegisterUserResponse =
+  | {
+      isSuccess: false;
+    }
+  | UserFilterResponse;
+
+export interface CreateUserAddressResponse {
+  isSuccess: boolean;
+}
+
 export type UserAddressResponse = Omit<UserAddressInterface, 'id'>;

@@ -7,7 +7,7 @@ import {
   BasketFilterResponse,
   RemoveProductFromBasket,
 } from '../types';
-import { basketFilter } from '../utils/basketFilter';
+import { basketFilter } from '../utils/basket-filter';
 
 @Injectable()
 export class BasketService {

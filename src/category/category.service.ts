@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import {
   CategoryFilterResponse,
   CreateCategoryResponse,
@@ -8,7 +7,7 @@ import {
 } from '../types';
 import * as fs from 'fs';
 import { ProductCategoryEntity } from './entities/category.entity';
-import { categoryFilter } from '../utils/categoryFilter';
+import { categoryFilter } from '../utils/category-filter';
 
 @Injectable()
 export class CategoryService {

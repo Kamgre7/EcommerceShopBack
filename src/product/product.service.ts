@@ -1,18 +1,16 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { CreateProductDto } from './dto/create-product.dto';
-// import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import {
   CreateProductResponse,
-  FindOneProductResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
   RemoveProductResponse,
 } from '../types';
 import { CategoryService } from '../category/category.service';
 import { ProductInventoryEntity } from './entities/product-inventory.entity';
-import { productFilter } from '../utils/productFilter';
+import { productFilter } from '../utils/product-filter';
 import { BasketService } from '../basket/basket.service';
 
 @Injectable()
