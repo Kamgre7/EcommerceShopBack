@@ -18,3 +18,5 @@ export interface UserAddressInterface {
   country: string;
   mobilePhone: number;
 }
+
+export type UserAddressResponse = Omit<UserAddressInterface, 'id'>;

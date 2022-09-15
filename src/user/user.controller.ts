@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { hashPassword } from '../utils/hash-password';
+import { CreateUserAddressDto } from './dto/create-user-address.dto';
 
 @Controller('/user')
 export class UserController {
@@ -20,6 +20,18 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
+  @Post('/address/:userId')
+  createUserAddress(
+    @Body() createUserAddressDto: CreateUserAddressDto,
+    @Param('userId') userId: string,
+  ) {
+    return this.userService.createUserAddress(createUserAddressDto, userId);
+  }
+
+  @Get('/address/:userId')
+  findUserAddress(@Param('userId') userId: string) {
+    return this.userService.findUserAddress(userId);
+  }
   /*@Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);

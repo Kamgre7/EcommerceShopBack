@@ -1,0 +1,15 @@
+import { UserEntity } from "../user/entities/user.entity";
+import { UserAddressResponse } from "../types";
+
+export const userAddressFilter = (
+  user: UserEntity,
+): UserAddressResponse[] => {
+  const {address} = user;
+
+  const filteredAddress = address
+    .map(({address, city,postalCode,country, mobilePhone})=> ({address, city, postalCode, country, mobilePhone}))
+
+return filteredAddress
+};
+
+

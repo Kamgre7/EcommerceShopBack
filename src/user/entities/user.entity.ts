@@ -1,5 +1,12 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserInterface } from '../../types';
+import { UserAddressEntity } from './user-address.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity implements UserInterface {
@@ -47,4 +54,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
     default: () => 'CURRENT_TIMESTAMP',
   })
   modifiedAt: Date;
+
+  @OneToMany(() => UserAddressEntity, (entity) => entity.user)
+  address: UserAddressEntity[];
 }

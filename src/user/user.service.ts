@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { hashPassword, randomSalt } from '../utils/hash-password';
+import { UserAddressEntity } from './entities/user-address.entity';
+import { CreateUserAddressDto } from './dto/create-user-address.dto';
+import { userAddressFilter } from '../utils/userFilter';
 
 @Injectable()
 export class UserService {
@@ -38,15 +41,67 @@ export class UserService {
     newUser.pwdHash = hashPassword(password, newUser.pwdSalt);
 
     await newUser.save();
-    return 'This action adds a new user';
+
+    const newUserAddress = new UserAddressEntity();
+    newUserAddress.address = address;
+    newUserAddress.city = city;
+    newUserAddress.country = country;
+    newUserAddress.mobilePhone = mobilePhone;
+    newUserAddress.postalCode = postalCode;
+
+    await newUserAddress.save();
+
+    newUserAddress.user = newUser;
+    await newUserAddress.save();
+
+    return { id: newUser.id, email: newUser.email };
+  }
+
+  async createUserAddress(
+    createUserAddressDto: CreateUserAddressDto,
+    userId: string,
+  ) {
+    const { city, address, country, mobilePhone, postalCode } =
+      createUserAddressDto;
+
+    const user = await UserEntity.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      return { isSuccess: false };
+    }
+
+    const newUserAddress = new UserAddressEntity();
+    newUserAddress.address = address;
+    newUserAddress.city = city;
+    newUserAddress.country = country;
+    newUserAddress.mobilePhone = mobilePhone;
+    newUserAddress.postalCode = postalCode;
+
+    await newUserAddress.save();
+
+    newUserAddress.user = user;
+    await newUserAddress.save();
+
+    return { isSuccess: true };
+  }
+
+  async findUserAddress(id: string) {
+    const user = await UserEntity.findOne({
+      where: {
+        id: 'f7d5df5e-d62e-4fd8-bff7-0f5353b216a6',
+      },
+      relations: ['address'],
+    });
+
+    return userAddressFilter(user);
   }
 
   /* findAll() {
     return `This action returns all user`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
