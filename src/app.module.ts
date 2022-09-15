@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { BasketModule } from './basket/basket.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { BasketModule } from './basket/basket.module';
     forwardRef(() => ProductModule),
     forwardRef(() => CategoryModule),
     forwardRef(() => BasketModule),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
