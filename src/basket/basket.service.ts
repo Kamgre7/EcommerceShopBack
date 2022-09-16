@@ -25,47 +25,64 @@ export class BasketService {
     const product = await this.productService.findOneProduct(productId);
 
     if (!product || product.productInventory.quantity < quantity) {
-      return { isSuccess: false };
+      return {
+        isSuccess: false,
+        message: "Product doesn't exist or isn't in stock in this quantity",
+      };
     }
 
-    const basket = new BasketEntity();
-    basket.quantity = quantity;
-    await basket.save();
+    const items: BasketEntity[] = await BasketEntity.find({
+      where: {
+        user: user.valueOf(),
+      },
+      relations: ['product'],
+    });
 
-    basket.product = product;
-    basket.user = user;
-    await basket.save();
+    const existingProductBasket = items.find(
+      (itemActuallyInBasket) => itemActuallyInBasket.product.id === productId,
+    );
 
-    return { isSuccess: true, id: basket.id };
+    if (!!existingProductBasket) {
+      if (
+        product.productInventory.quantity <
+        (existingProductBasket.quantity += quantity)
+      ) {
+        return {
+          isSuccess: false,
+          message: 'Not enough stock quantity of product',
+        };
+      }
+
+      existingProductBasket.quantity += quantity;
+      await existingProductBasket.save();
+
+      return { isSuccess: true, id: existingProductBasket.id };
+    } else {
+      const basket = new BasketEntity();
+      basket.quantity = quantity;
+      await basket.save();
+
+      basket.product = product;
+      basket.user = user;
+      await basket.save();
+
+      return { isSuccess: true, id: basket.id };
+    }
   }
 
-  async showBasket(/*id: string*/): Promise<BasketFilterResponse[]> {
-    const items: BasketFilterResponse[] = (
+  async showBasket(user: UserEntity): Promise<BasketFilterResponse[]> {
+    return (
       await BasketEntity.find({
+        where: {
+          user: user.valueOf(),
+        },
         relations: ['product'],
       })
     ).map((item) => basketFilter(item));
-
-    const singleBasket: BasketFilterResponse[] = [];
-
-    items.forEach((item) => {
-      const findExistingItem = singleBasket.findIndex(
-        (itemActuallyInBasket) =>
-          item.product.id === itemActuallyInBasket.product.id,
-      );
-
-      if (findExistingItem !== -1) {
-        singleBasket[findExistingItem].quantity += item.quantity;
-      } else {
-        singleBasket.push(item);
-      }
-    });
-
-    return singleBasket;
   }
 
-  async getTotalPrice(/*id: string*/): Promise<number> {
-    const basketItems = await this.showBasket();
+  async getTotalPrice(user: UserEntity): Promise<number> {
+    const basketItems = await this.showBasket(user);
 
     return basketItems.reduce(
       (prev, curr) => prev + curr.quantity * curr.product.price,
@@ -73,17 +90,16 @@ export class BasketService {
     );
   }
 
-  /*
-  update(id: number, updateBasketDto: UpdateBasketDto) {
-    return `This action updates a #${id} basket`;
-  }
-*/
-
-  async removeItem(id: string): Promise<RemoveProductFromBasket> {
+  async removeItem(
+    basketId: string,
+    user: UserEntity,
+  ): Promise<RemoveProductFromBasket> {
     const basketItem = await BasketEntity.findOne({
       where: {
-        id,
+        id: basketId,
+        user: user.valueOf(),
       },
+      relations: ['user'],
     });
 
     if (!basketItem) {
@@ -94,7 +110,13 @@ export class BasketService {
     return { isSuccess: true };
   }
 
-  clearBasket(id: string) {
-    return `This action removes a all items in basket ${id}`;
+  async clearBasket(user: UserEntity): Promise<RemoveProductFromBasket> {
+    await BasketEntity.delete({
+      user: user.valueOf(),
+    });
+
+    return {
+      isSuccess: true,
+    };
   }
 }

@@ -32,27 +32,30 @@ export class BasketController {
     return this.basketService.addToBasket(createBasketDto, user);
   }
 
-  @Get(/*'/:id'*/)
+  @Get('/')
   @UseGuards(AuthGuard('jwt'))
-  showBasket(/*@Param('id') id: string*/): Promise<BasketFilterResponse[]> {
-    return this.basketService.showBasket(/*id*/);
+  showBasket(@UserObj() user: UserEntity): Promise<BasketFilterResponse[]> {
+    return this.basketService.showBasket(user);
   }
 
   @Get('/total-price' /*/total-price/:id*/)
   @UseGuards(AuthGuard('jwt'))
-  getTotalPrice(/*@Param('id') id: string*/): Promise<number> {
-    return this.basketService.getTotalPrice(/*id*/);
+  getTotalPrice(@UserObj() user: UserEntity): Promise<number> {
+    return this.basketService.getTotalPrice(user);
   }
 
-  @Delete('/all/:id')
+  @Delete('/all')
   @UseGuards(AuthGuard('jwt'))
-  clearBasket(@Param('id') id: string) {
-    return this.basketService.clearBasket(id);
+  clearBasket(@UserObj() user: UserEntity): Promise<RemoveProductFromBasket> {
+    return this.basketService.clearBasket(user);
   }
 
-  @Delete('/:id')
+  @Delete('/:basketId')
   @UseGuards(AuthGuard('jwt'))
-  removeItem(@Param('id') id: string): Promise<RemoveProductFromBasket> {
-    return this.basketService.removeItem(id);
+  removeItem(
+    @Param('basketId') basketId: string,
+    @UserObj() user: UserEntity,
+  ): Promise<RemoveProductFromBasket> {
+    return this.basketService.removeItem(basketId, user);
   }
 }

@@ -25,7 +25,9 @@ export class BasketEntity extends BaseEntity implements BasketInterface {
   @JoinColumn()
   product: ProductEntity;
 
-  @ManyToOne(() => UserEntity, (entity) => entity.userBasket)
+  @ManyToOne(() => UserEntity, (entity) => entity.userBasket, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   user: UserEntity;
 }

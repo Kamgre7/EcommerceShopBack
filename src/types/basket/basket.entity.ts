@@ -12,6 +12,7 @@ export type AddToBasketResponse =
     }
   | {
       isSuccess: false;
+      message: string;
     };
 
 export interface BasketFilterResponse {
