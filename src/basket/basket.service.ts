@@ -8,6 +8,7 @@ import {
   RemoveProductFromBasket,
 } from '../types';
 import { basketFilter } from '../utils/basket-filter';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Injectable()
 export class BasketService {
@@ -18,6 +19,7 @@ export class BasketService {
 
   async addToBasket(
     createBasketDto: CreateBasketDto,
+    user: UserEntity,
   ): Promise<AddToBasketResponse> {
     const { quantity, productId } = createBasketDto;
     const product = await this.productService.findOneProduct(productId);

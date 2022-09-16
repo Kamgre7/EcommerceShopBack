@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { UserInterface } from '../../types';
 import { UserAddressEntity } from './user-address.entity';
+import { BasketEntity } from '../../basket/entities/basket.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity implements UserInterface {
@@ -57,4 +58,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
 
   @OneToMany(() => UserAddressEntity, (entity) => entity.user)
   address: UserAddressEntity[];
+
+  @OneToMany(() => BasketEntity, (entity) => entity.user)
+  userBasket: BasketEntity[];
 }

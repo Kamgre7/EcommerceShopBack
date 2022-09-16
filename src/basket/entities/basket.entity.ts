@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { ProductEntity } from '../../product/entities/product.entity';
 import { BasketInterface } from '../../types';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity()
 export class BasketEntity extends BaseEntity implements BasketInterface {
@@ -20,7 +21,11 @@ export class BasketEntity extends BaseEntity implements BasketInterface {
   })
   quantity: number;
 
-  @ManyToOne((type) => ProductEntity, (entity) => entity.itemsInBasket)
+  @ManyToOne(() => ProductEntity, (entity) => entity.itemsInBasket)
   @JoinColumn()
   product: ProductEntity;
+
+  @ManyToOne(() => UserEntity, (entity) => entity.userBasket)
+  @JoinColumn()
+  user: UserEntity;
 }
