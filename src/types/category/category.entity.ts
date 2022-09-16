@@ -17,5 +17,6 @@ export interface CategoryFilterResponse {
 export type CreateCategoryResponse =
   | {
       isSuccess: false;
+      message: string;
     }
   | CategoryFilterResponse;

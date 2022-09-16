@@ -7,10 +7,13 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
+import * as path from 'path';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import * as path from 'path';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import {
@@ -20,12 +23,14 @@ import {
   RemoveProductResponse,
 } from '../types';
 import { ProductEntity } from './entities/product.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('/')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -61,13 +66,17 @@ export class ProductController {
     return this.productService.findOneProduct(id);
   }
 
-  /* @Patch('/:id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
-  }*/
-
   @Delete('/:id')
+  @UseGuards(AuthGuard('jwt'))
   removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
     return this.productService.removeProduct(id);
+  }
+
+  @Get('/photo/:productId')
+  findProductPhoto(
+    @Param('productId') productId: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    return this.productService.findProductPhoto(productId, res);
   }
 }

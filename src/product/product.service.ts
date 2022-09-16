@@ -1,5 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
+import * as path from 'path';
+import { Response } from 'express';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import {
@@ -12,6 +14,7 @@ import { CategoryService } from '../category/category.service';
 import { ProductInventoryEntity } from './entities/product-inventory.entity';
 import { productFilter } from '../utils/product-filter';
 import { BasketService } from '../basket/basket.service';
+import { storageDir } from '../utils/storage';
 
 @Injectable()
 export class ProductService {
@@ -32,7 +35,10 @@ export class ProductService {
     const category = await this.categoryService.findOneCategory(categoryId);
 
     if (!category) {
-      return { isSuccess: false };
+      return {
+        isSuccess: false,
+        message: "Category with that name doesn't exist",
+      };
     }
 
     try {
@@ -65,7 +71,10 @@ export class ProductService {
         }
       } catch (err) {}
 
-      throw e;
+      return {
+        isSuccess: false,
+        message: e.message,
+      };
     }
   }
 
@@ -94,15 +103,11 @@ export class ProductService {
         boughtCounter: 'DESC',
       },
       skip: 0,
-      take: 2,
+      take: 3,
     });
 
     return topProducts.map((product) => productFilter(product));
   }
-
-  /*  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }*/
 
   async removeProduct(id: string): Promise<RemoveProductResponse> {
     const product = await ProductEntity.findOne({
@@ -130,5 +135,30 @@ export class ProductService {
     return {
       isSuccess: true,
     };
+  }
+
+  async findProductPhoto(productId: string, res: Response): Promise<void> {
+    try {
+      const product = await ProductEntity.findOne({
+        where: { id: productId },
+      });
+
+      if (!product) {
+        throw new Error('No object found!');
+      }
+
+      if (!product.photoFileName) {
+        throw new Error('No photo in this category!');
+      }
+
+      res.sendFile(product.photoFileName, {
+        root: path.join(storageDir(), 'product-photo'),
+      });
+    } catch (e) {
+      res.json({
+        isSuccess: false,
+        message: e.message,
+      });
+    }
   }
 }

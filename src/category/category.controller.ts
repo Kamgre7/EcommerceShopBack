@@ -3,18 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import * as path from 'path';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
-import * as path from 'path';
 import {
   CategoryFilterResponse,
   CreateCategoryResponse,
@@ -27,6 +28,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post('/')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -57,16 +59,11 @@ export class CategoryController {
     return this.categoryService.findOneCategory(id);
   }
 
-  /*  @Patch(':id')
-  updateCategory(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoryService.update(id, updateCategoryDto);
+  @Get('/photo/:categoryId')
+  findCategoryPhoto(
+    @Param('categoryId') categoryId: string,
+    @Res() res: Response,
+  ): Promise<void> {
+    return this.categoryService.findCategoryPhoto(categoryId, res);
   }
-
-  @Delete(':id')
-  removeCategory(@Param('id') id: string) {
-    return this.categoryService.remove(id);
-  }*/
 }

@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import * as fs from 'fs';
+import { Response } from 'express';
+import * as path from 'path';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import {
   CategoryFilterResponse,
   CreateCategoryResponse,
   MulterDiskUploadedFiles,
 } from '../types';
-import * as fs from 'fs';
 import { ProductCategoryEntity } from './entities/category.entity';
 import { categoryFilter } from '../utils/category-filter';
+import { storageDir } from '../utils/storage';
 
 @Injectable()
 export class CategoryService {
@@ -25,7 +28,10 @@ export class CategoryService {
     });
 
     if (duplicatedCategory) {
-      return { isSuccess: false };
+      return {
+        isSuccess: false,
+        message: 'A category with that name already exists!',
+      };
     }
 
     try {
@@ -47,7 +53,10 @@ export class CategoryService {
         }
       } catch (err) {}
 
-      throw e;
+      return {
+        isSuccess: false,
+        message: e.message,
+      };
     }
   }
 
@@ -64,11 +73,28 @@ export class CategoryService {
     return !category ? null : category;
   }
 
-  /*  update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
+  async findCategoryPhoto(categoryId: string, res: Response): Promise<void> {
+    try {
+      const category = await ProductCategoryEntity.findOne({
+        where: { id: categoryId },
+      });
 
-  async remove(id: string): Promise<any> {
-    return await ProductCategoryEntity.delete(id);
-  }*/
+      if (!category) {
+        throw new Error('No object found!');
+      }
+
+      if (!category.photoFileName) {
+        throw new Error('No photo in this category!');
+      }
+
+      res.sendFile(category.photoFileName, {
+        root: path.join(storageDir(), 'category-photo'),
+      });
+    } catch (e) {
+      res.json({
+        isSuccess: false,
+        message: e.message,
+      });
+    }
+  }
 }

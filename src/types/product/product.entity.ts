@@ -35,6 +35,7 @@ export interface ProductFilterResponse {
 export type CreateProductResponse =
   | {
       isSuccess: false;
+      message: string;
     }
   | ProductFilterResponse;
 
