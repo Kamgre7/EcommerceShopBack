@@ -33,6 +33,7 @@ export class BasketService {
     await basket.save();
 
     basket.product = product;
+    basket.user = user;
     await basket.save();
 
     return { isSuccess: true, id: basket.id };

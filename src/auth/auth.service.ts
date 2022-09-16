@@ -7,7 +7,7 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { hashPassword } from '../utils/hash-password';
 import { UserEntity } from '../user/entities/user.entity';
 import { JwtPayload } from './jwt.strategy';
-import { CreateTokenResponse, LoginResponse } from '../types';
+import { CreateTokenResponse, LoginResponse, LogoutResponse } from '../types';
 
 @Injectable()
 export class AuthService {
@@ -79,6 +79,30 @@ export class AuthService {
           userFirstName: user.firstName,
           userId: user.id,
         });
+    } catch (e) {
+      return res.json({
+        isSuccess: false,
+        message: e.message,
+      });
+    }
+  }
+
+  async logout(
+    user: UserEntity,
+    res: Response,
+  ): Promise<Response<LogoutResponse>> {
+    try {
+      user.currentTokenId = null;
+      await user.save();
+      res.clearCookie('jwt', {
+        secure: false,
+        domain: 'localhost',
+        httpOnly: true,
+      });
+
+      return res.json({
+        isSuccess: true,
+      });
     } catch (e) {
       return res.json({
         isSuccess: false,

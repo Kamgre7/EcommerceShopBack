@@ -15,3 +15,10 @@ export interface CreateTokenResponse {
   accessToken: string;
   expiresIn: number;
 }
+
+export type LogoutFailedResponse = LoginFailedResponse;
+export interface LogoutSuccessfulResponse {
+  isSuccess: true;
+}
+
+export type LogoutResponse = LogoutFailedResponse | LogoutSuccessfulResponse;

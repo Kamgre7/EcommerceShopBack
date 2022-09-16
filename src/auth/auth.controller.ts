@@ -1,7 +1,11 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { AuthLoginDto } from './dto/auth-login.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { UserObj } from '../decorators/user-obj.decorator';
+import { UserEntity } from '../user/entities/user.entity';
+import { LoginResponse, LogoutResponse } from '../types';
 
 @Controller('/auth')
 export class AuthController {
@@ -11,7 +15,16 @@ export class AuthController {
   userLogin(
     @Body() authLoginDto: AuthLoginDto,
     @Res() res: Response,
-  ): Promise<any> {
+  ): Promise<Response<LoginResponse>> {
     return this.authService.login(authLoginDto, res);
+  }
+
+  @Get('/logout')
+  @UseGuards(AuthGuard('jwt'))
+  userLogout(
+    @UserObj() user: UserEntity,
+    @Res() res: Response,
+  ): Promise<Response<LogoutResponse>> {
+    return this.authService.logout(user, res);
   }
 }
