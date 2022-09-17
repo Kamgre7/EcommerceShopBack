@@ -4,12 +4,20 @@ import { UserEntity } from './entities/user.entity';
 import { hashPassword, randomSalt } from '../utils/hash-password';
 import { UserAddressEntity } from './entities/user-address.entity';
 import { CreateUserAddressDto } from './dto/create-user-address.dto';
-import { userAddressFilter, userFilter } from '../utils/user-filter';
+import {
+  checkUser,
+  userAddressFilter,
+  userFilter,
+  userInfoFilter,
+} from '../utils/user-filter';
 import {
   CreateUserAddressResponse,
   RegisterUserResponse,
   UserAddressResponse,
+  UserInfoResponse,
+  UserRole,
 } from '../types';
+import { BasketEntity } from '../basket/entities/basket.entity';
 
 @Injectable()
 export class UserService {
@@ -76,43 +84,61 @@ export class UserService {
 
   async createAdditionalUserAddress(
     createUserAddressDto: CreateUserAddressDto,
-    userId: string,
+    user: UserEntity,
   ): Promise<CreateUserAddressResponse> {
-    const user = await UserEntity.findOne({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!user) {
-      return { isSuccess: false };
-    }
-
     await UserService.createUserAddress(createUserAddressDto, user);
 
     return { isSuccess: true };
   }
 
-  async findUserAddress(id: string): Promise<UserAddressResponse[]> {
-    const user = await UserEntity.findOne({
+  async findOneUser(
+    user: UserEntity,
+    userId: string,
+  ): Promise<UserInfoResponse> {
+    if (checkUser(userId, user)) {
+      return {
+        isSuccess: false,
+        message: "You can't see another user profile",
+      };
+    }
+    const userInfo = await UserEntity.findOne({
       where: {
-        id,
+        id: userId,
       },
       relations: ['address'],
     });
+    return userInfoFilter(userInfo);
+  }
 
+  async findAllUsers(): Promise<UserInfoResponse[]> {
+    const users = await UserEntity.find({
+      relations: ['address'],
+    });
+    return users.map((user) => userInfoFilter(user));
+  }
+
+  async findUserAddress(user: UserEntity): Promise<UserAddressResponse[]> {
     return userAddressFilter(user);
   }
 
-  /* findAll() {
-    return `This action returns all user`;
-  }
+  async removeUser(userId: string, user: UserEntity) {
+    if (checkUser(userId, user)) {
+      return {
+        isSuccess: false,
+        message: "You can't delete another user account",
+      };
+    }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+    await BasketEntity.delete({
+      user: user.valueOf(),
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }*/
+    await UserAddressEntity.delete({
+      user: user.valueOf(),
+    });
+
+    await user.remove();
+
+    return { isSuccess: true };
+  }
 }

@@ -3,13 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CreateUserAddressDto } from './dto/create-user-address.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { UserObj } from '../decorators/user-obj.decorator';
+import { UserEntity } from './entities/user.entity';
+import { Roles } from '../decorators/roles.decorator';
+import { UserAddressResponse, UserInfoResponse, UserRole } from '../types';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/user')
 export class UserController {
@@ -20,28 +26,46 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  @Post('/address/:userId')
+  @Post('/address/')
+  @UseGuards(AuthGuard('jwt'))
   createUserAddress(
     @Body() createUserAddressDto: CreateUserAddressDto,
-    @Param('userId') userId: string,
+    @UserObj() user: UserEntity,
   ) {
     return this.userService.createAdditionalUserAddress(
       createUserAddressDto,
-      userId,
+      user,
     );
   }
 
-  @Get('/address/:userId')
-  findUserAddress(@Param('userId') userId: string) {
-    return this.userService.findUserAddress(userId);
-  }
-  /*@Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Get('/')
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  findAllUsers(): Promise<UserInfoResponse[]> {
+    return this.userService.findAllUsers();
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }*/
+  @Get('/:id')
+  @UseGuards(AuthGuard('jwt'))
+  findOneUser(
+    @Param('id') userId: string,
+    @UserObj() user: UserEntity,
+  ): Promise<UserInfoResponse> {
+    return this.userService.findOneUser(user, userId);
+  }
+
+  @Get('/address/')
+  @UseGuards(AuthGuard('jwt'))
+  findUserAddress(@UserObj() user: UserEntity): Promise<UserAddressResponse[]> {
+    return this.userService.findUserAddress(user);
+  }
+
+  @Delete('/:userId')
+  @UseGuards(AuthGuard('jwt'))
+  removeUser(
+    @Param('userId') userId: string,
+    @UserObj() user: UserEntity,
+  ): Promise<any> {
+    return this.userService.removeUser(userId, user);
+  }
 }
