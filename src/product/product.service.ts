@@ -34,10 +34,23 @@ export class ProductService {
     const photo = files?.photo?.[0] ?? null;
     const category = await this.categoryService.findOneCategory(categoryId);
 
+    const duplicatedProduct = await ProductEntity.findOne({
+      where: {
+        name,
+      },
+    });
+
     if (!category) {
       return {
         isSuccess: false,
         message: "Category with that name doesn't exist",
+      };
+    }
+
+    if (duplicatedProduct) {
+      return {
+        isSuccess: false,
+        message: 'Product with that name already exists',
       };
     }
 

@@ -19,6 +19,11 @@ export interface UserAddressInterface {
   mobilePhone: number;
 }
 
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
 export interface UserFilterResponse {
   id: string;
   email: string;

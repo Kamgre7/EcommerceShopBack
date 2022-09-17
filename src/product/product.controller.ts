@@ -1,14 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  UseInterceptors,
+  Get,
+  Param,
+  Post,
+  Res,
   UploadedFiles,
   UseGuards,
-  Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import * as path from 'path';
@@ -21,16 +21,20 @@ import {
   MulterDiskUploadedFiles,
   ProductFilterResponse,
   RemoveProductResponse,
+  UserRole,
 } from '../types';
 import { ProductEntity } from './entities/product.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../guards/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
 
 @Controller('/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('/')
-  @UseGuards(AuthGuard('jwt'))
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -67,7 +71,8 @@ export class ProductController {
   }
 
   @Delete('/:id')
-  @UseGuards(AuthGuard('jwt'))
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
     return this.productService.removeProduct(id);
   }

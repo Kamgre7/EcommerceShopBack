@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserInterface } from '../../types';
+import { UserInterface, UserRole } from '../../types';
 import { UserAddressEntity } from './user-address.entity';
 import { BasketEntity } from '../../basket/entities/basket.entity';
 
@@ -45,6 +45,11 @@ export class UserEntity extends BaseEntity implements UserInterface {
     nullable: true,
   })
   currentTokenId: string;
+
+  @Column({
+    default: UserRole.USER,
+  })
+  role: UserRole;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',

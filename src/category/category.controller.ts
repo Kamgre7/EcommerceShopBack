@@ -20,15 +20,19 @@ import {
   CategoryFilterResponse,
   CreateCategoryResponse,
   MulterDiskUploadedFiles,
+  UserRole,
 } from '../types';
 import { ProductCategoryEntity } from './entities/category.entity';
+import { Roles } from '../decorators/roles.decorator';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('/category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post('/')
-  @UseGuards(AuthGuard('jwt'))
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
