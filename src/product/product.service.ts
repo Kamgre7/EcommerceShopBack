@@ -17,6 +17,7 @@ import { productFilter } from '../utils/product-filter';
 import { BasketService } from '../basket/basket.service';
 import { storageDir } from '../utils/storage';
 import { Like } from 'typeorm';
+import { ProductCategoryEntity } from '../category/entities/category.entity';
 
 @Injectable()
 export class ProductService {
@@ -102,9 +103,15 @@ export class ProductService {
   }
 
   async findAllProductByCategory(
-    categoryId: string,
+    categoryName: string,
   ): Promise<FindProductByCategoryResponse> {
-    const category = await this.categoryService.findOneCategory(categoryId);
+    //const category = await this.categoryService.findOneCategory(categoryId);
+
+    const category = await ProductCategoryEntity.findOne({
+      where: {
+        name: Like(`%${categoryName}%`),
+      },
+    });
 
     if (!category) {
       return {
