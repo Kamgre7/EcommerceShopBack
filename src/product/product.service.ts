@@ -6,6 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import {
   CreateProductResponse,
+  FindProductByCategoryResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
   RemoveProductResponse,
@@ -15,6 +16,7 @@ import { ProductInventoryEntity } from './entities/product-inventory.entity';
 import { productFilter } from '../utils/product-filter';
 import { BasketService } from '../basket/basket.service';
 import { storageDir } from '../utils/storage';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -94,6 +96,40 @@ export class ProductService {
   async findAllProducts(): Promise<ProductFilterResponse[]> {
     const products = await ProductEntity.find({
       relations: ['productInventory', 'category'],
+    });
+
+    return products.map((product) => productFilter(product));
+  }
+
+  async findAllProductByCategory(
+    categoryId: string,
+  ): Promise<FindProductByCategoryResponse> {
+    const category = await this.categoryService.findOneCategory(categoryId);
+
+    if (!category) {
+      return {
+        isSuccess: false,
+        message: "Can't find a products with this category",
+      };
+    }
+
+    const products = await ProductEntity.find({
+      where: {
+        category: category.valueOf(),
+      },
+      relations: ['productInventory', 'category'],
+    });
+
+    return products.map((product) => productFilter(product));
+  }
+
+  async findAllProductsBySearchTerm(
+    searchTerm: string,
+  ): Promise<ProductFilterResponse[]> {
+    const products = await ProductEntity.find({
+      where: {
+        name: Like(`%${searchTerm}%`),
+      },
     });
 
     return products.map((product) => productFilter(product));

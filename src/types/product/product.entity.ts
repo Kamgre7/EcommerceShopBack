@@ -40,3 +40,10 @@ export type CreateProductResponse =
   | ProductFilterResponse;
 
 export type FindOneProductResponse = ProductFilterResponse | null;
+
+export type FindProductByCategoryResponse =
+  | ProductFilterResponse[]
+  | {
+      isSuccess: false;
+      message: string;
+    };

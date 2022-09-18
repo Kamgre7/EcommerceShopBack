@@ -18,6 +18,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import {
   CreateProductResponse,
+  FindProductByCategoryResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
   RemoveProductResponse,
@@ -63,6 +64,20 @@ export class ProductController {
   @Get('/ranking')
   findBestSoldProduct(): Promise<ProductFilterResponse[]> {
     return this.productService.findBestSoldProduct();
+  }
+
+  @Get('/category/:categoryId')
+  findAllProductByCategory(
+    @Param('categoryId') categoryId: string,
+  ): Promise<FindProductByCategoryResponse> {
+    return this.productService.findAllProductByCategory(categoryId);
+  }
+
+  @Get('/find/:searchTerm')
+  findAllProductsBySearchTerm(
+    @Param('searchTerm') searchTerm: string,
+  ): Promise<ProductFilterResponse[]> {
+    return this.productService.findAllProductsBySearchTerm(searchTerm);
   }
 
   @Get('/:id')
