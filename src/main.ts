@@ -13,7 +13,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  (app as NestExpressApplication).use(helmet());
+  (app as NestExpressApplication).use(
+    helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }),
+  );
   app.use(cookieParser());
 
   app.useGlobalPipes(

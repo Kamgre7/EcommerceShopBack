@@ -130,6 +130,7 @@ export class ProductService {
       where: {
         name: Like(`%${searchTerm}%`),
       },
+      relations: ['category'],
     });
 
     return products.map((product) => productFilter(product));
@@ -151,6 +152,7 @@ export class ProductService {
       order: {
         boughtCounter: 'DESC',
       },
+      relations: ['category'],
       skip: 0,
       take: 3,
     });

@@ -24,6 +24,7 @@ export interface RemoveProductResponse {
 export interface ProductFilterResponse {
   id: string;
   name: string;
+  category: string;
   price: number;
   quantity: number;
   description: string;
