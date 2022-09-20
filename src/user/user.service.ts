@@ -81,8 +81,10 @@ export class UserService {
     newUser.email = email;
     newUser.pwdSalt = randomSalt(64);
     newUser.pwdHash = hashPassword(password, newUser.pwdSalt);
-    newUser.activationToken = userActivationToken(newUser.id);
 
+    await newUser.save();
+
+    newUser.activationToken = userActivationToken(newUser.id);
     await newUser.save();
 
     await UserService.createUserAddress(

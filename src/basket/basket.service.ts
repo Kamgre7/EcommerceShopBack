@@ -31,6 +31,13 @@ export class BasketService {
       };
     }
 
+    if (!user.active) {
+      return {
+        isSuccess: false,
+        message: 'You must activate your account to buy this product',
+      };
+    }
+
     const items: BasketEntity[] = await BasketEntity.find({
       where: {
         user: user.valueOf(),
@@ -45,7 +52,7 @@ export class BasketService {
     if (!!existingProductBasket) {
       if (
         product.productInventory.quantity <
-        (existingProductBasket.quantity += quantity)
+        existingProductBasket.quantity + quantity
       ) {
         return {
           isSuccess: false,
@@ -71,14 +78,19 @@ export class BasketService {
   }
 
   async showBasket(user: UserEntity): Promise<BasketFilterResponse[]> {
-    return (
-      await BasketEntity.find({
-        where: {
-          user: user.valueOf(),
-        },
-        relations: ['product'],
-      })
-    ).map((item) => basketFilter(item));
+    const basket = await BasketEntity.find({
+      where: {
+        user: user.valueOf(),
+      },
+      relations: ['product'],
+    });
+
+    /*
+        .map((item) => basketFilter(item));
+    * */
+    return await Promise.all(
+      basket.map(async (item) => await basketFilter(item)),
+    );
   }
 
   async getTotalPrice(user: UserEntity): Promise<number> {
