@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { BasketModule } from './basket/basket.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     forwardRef(() => BasketModule),
     forwardRef(() => UserModule),
     forwardRef(() => AuthModule),
+    forwardRef(() => MailModule),
   ],
   controllers: [AppController],
   providers: [AppService],

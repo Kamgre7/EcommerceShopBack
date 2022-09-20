@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { hashPassword, randomSalt } from '../utils/hash-password';
@@ -15,12 +15,17 @@ import {
   RegisterUserResponse,
   UserAddressResponse,
   UserInfoResponse,
-  UserRole,
 } from '../types';
 import { BasketEntity } from '../basket/entities/basket.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @Inject(forwardRef(() => MailService))
+    private mailService: MailService,
+  ) {}
+
   private static async createUserAddress(
     { city, address, country, mobilePhone, postalCode }: CreateUserAddressDto,
     user: UserEntity,
@@ -77,6 +82,14 @@ export class UserService {
     await UserService.createUserAddress(
       { city, address, country, mobilePhone, postalCode },
       newUser,
+    );
+
+    await this.mailService.sendUserActivationLinkMail(
+      newUser.email,
+      'Ecommerce - Registration user link',
+      newUser.firstName,
+      newUser.lastName,
+      newUser.id,
     );
 
     return userFilter(newUser);
