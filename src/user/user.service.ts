@@ -13,11 +13,16 @@ import {
 import {
   CreateUserAddressResponse,
   RegisterUserResponse,
+  UserActivationInterface,
   UserAddressResponse,
+  UserDeleteAccount,
+  UserEditPwdInterface,
   UserInfoResponse,
 } from '../types';
 import { BasketEntity } from '../basket/entities/basket.entity';
 import { MailService } from '../mail/mail.service';
+import { userActivationToken } from '../utils/user-activation-token';
+import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 
 @Injectable()
 export class UserService {
@@ -76,6 +81,7 @@ export class UserService {
     newUser.email = email;
     newUser.pwdSalt = randomSalt(64);
     newUser.pwdHash = hashPassword(password, newUser.pwdSalt);
+    newUser.activationToken = userActivationToken(newUser.id);
 
     await newUser.save();
 
@@ -89,7 +95,7 @@ export class UserService {
       'Ecommerce - Registration user link',
       newUser.firstName,
       newUser.lastName,
-      newUser.id,
+      newUser.activationToken,
     );
 
     return userFilter(newUser);
@@ -134,7 +140,78 @@ export class UserService {
     return userAddressFilter(user);
   }
 
-  async removeUser(userId: string, user: UserEntity) {
+  async activateUserAccount(token: string): Promise<UserActivationInterface> {
+    const user = await UserEntity.findOne({
+      where: {
+        activationToken: token,
+      },
+    });
+
+    if (!user) {
+      return {
+        isSuccess: false,
+        message: "This user doesn't exist",
+      };
+    } else if (user.active) {
+      return {
+        isSuccess: false,
+        message: 'This user is already activated',
+      };
+    }
+
+    user.active = true;
+    user.activationToken = null;
+    await user.save();
+
+    return {
+      isSuccess: true,
+      message: 'User activation was successful',
+    };
+  }
+
+  async editUserPassword(
+    editUserPwdDto: EditUserPwdDto,
+    user: UserEntity,
+  ): Promise<UserEditPwdInterface> {
+    const currentPassword = hashPassword(
+      editUserPwdDto.currentPassword,
+      user.pwdSalt,
+    );
+
+    const newPassword = hashPassword(editUserPwdDto.newPassword, user.pwdSalt);
+
+    if (user.pwdHash !== currentPassword) {
+      return {
+        isSuccess: false,
+        message: 'Wrong current password! Try again',
+      };
+    } else if (user.pwdHash === newPassword) {
+      return {
+        isSuccess: false,
+        message: 'Current and new password are the same',
+      };
+    }
+
+    user.pwdHash = newPassword;
+    await user.save();
+
+    await this.mailService.sendUserEditPwdMail(
+      user.email,
+      'Ecommerce Shop - Change password confirmation',
+      user.firstName,
+      user.lastName,
+    );
+
+    return {
+      isSuccess: true,
+      message: 'Password changed successfully',
+    };
+  }
+
+  async removeUser(
+    userId: string,
+    user: UserEntity,
+  ): Promise<UserDeleteAccount> {
     if (checkUser(userId, user)) {
       return {
         isSuccess: false,

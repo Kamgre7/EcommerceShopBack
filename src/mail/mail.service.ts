@@ -11,9 +11,9 @@ export class MailService {
     subject: string,
     firstName: string,
     lastName: string,
-    userId: string,
+    activationToken: string,
   ): Promise<SendMailInterface> {
-    const url = `http://localhost:3001/user/activate/${userId}`;
+    const url = `http://localhost:3001/user/activate/${activationToken}`;
     try {
       await this.mailerService.sendMail({
         to,
@@ -23,6 +23,34 @@ export class MailService {
           firstName,
           lastName,
           url,
+        },
+      });
+      return {
+        isSuccess: true,
+        message: 'Email sent successfully!!',
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        message: error.message,
+      };
+    }
+  }
+
+  async sendUserEditPwdMail(
+    to: string,
+    subject: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<SendMailInterface> {
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject,
+        template: './edit-user-pwd-mail',
+        context: {
+          firstName,
+          lastName,
         },
       });
       return {

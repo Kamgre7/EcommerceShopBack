@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,8 +15,16 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserObj } from '../decorators/user-obj.decorator';
 import { UserEntity } from './entities/user.entity';
 import { Roles } from '../decorators/roles.decorator';
-import { UserAddressResponse, UserInfoResponse, UserRole } from '../types';
+import {
+  UserActivationInterface,
+  UserAddressResponse,
+  UserDeleteAccount,
+  UserEditPwdInterface,
+  UserInfoResponse,
+  UserRole,
+} from '../types';
 import { RolesGuard } from '../guards/roles.guard';
+import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 
 @Controller('/user')
 export class UserController {
@@ -36,6 +45,22 @@ export class UserController {
       createUserAddressDto,
       user,
     );
+  }
+
+  @Patch('/edit/password')
+  @UseGuards(AuthGuard('jwt'))
+  editUserPassword(
+    @UserObj() user: UserEntity,
+    @Body() editUserPwdDto: EditUserPwdDto,
+  ): Promise<UserEditPwdInterface> {
+    return this.userService.editUserPassword(editUserPwdDto, user);
+  }
+
+  @Get('/activate/:token')
+  activateUserAccount(
+    @Param('token') token: string,
+  ): Promise<UserActivationInterface> {
+    return this.userService.activateUserAccount(token);
   }
 
   @Get('/')
@@ -65,7 +90,7 @@ export class UserController {
   removeUser(
     @Param('userId') userId: string,
     @UserObj() user: UserEntity,
-  ): Promise<any> {
+  ): Promise<UserDeleteAccount> {
     return this.userService.removeUser(userId, user);
   }
 }

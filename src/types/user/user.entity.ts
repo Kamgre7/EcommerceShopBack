@@ -57,3 +57,20 @@ export interface UserInfoFailedResponse {
 export type UserInfoResponse =
   | UserInfoSuccessfulResponse
   | UserInfoFailedResponse;
+
+export interface UserActivationInterface {
+  isSuccess: boolean;
+  message: string;
+}
+
+export interface UserEditPwdInterface {
+  isSuccess: boolean;
+  message: string;
+}
+
+export type UserDeleteAccount =
+  | { isSuccess: true }
+  | {
+      isSuccess: false;
+      message: string;
+    };

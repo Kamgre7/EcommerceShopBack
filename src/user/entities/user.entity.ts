@@ -52,6 +52,16 @@ export class UserEntity extends BaseEntity implements UserInterface {
   role: UserRole;
 
   @Column({
+    default: false,
+  })
+  active: boolean;
+
+  @Column({
+    nullable: true,
+  })
+  activationToken: string;
+
+  @Column({
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
