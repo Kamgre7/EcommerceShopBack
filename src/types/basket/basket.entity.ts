@@ -24,3 +24,9 @@ export interface BasketFilterResponse {
 export interface RemoveProductFromBasket {
   isSuccess: boolean;
 }
+
+export interface BasketTotalPriceResponse {
+  totalPrice: number;
+  totalItems: number;
+  itemsType: number;
+}

@@ -1,20 +1,23 @@
 import { UserEntity } from '../user/entities/user.entity';
 import {
   RegisterUserResponse,
-  UserAddressResponse,
+  UserAddressInterface,
   UserInfoSuccessfulResponse,
   UserRole,
 } from '../types';
 
-export const userAddressFilter = (user: UserEntity): UserAddressResponse[] => {
+export const userAddressFilter = (user: UserEntity): UserAddressInterface[] => {
   const { address } = user;
-  return address.map(({ address, city, postalCode, country, mobilePhone }) => ({
-    address,
-    city,
-    postalCode,
-    country,
-    mobilePhone,
-  }));
+  return address.map(
+    ({ id, address, city, postalCode, country, mobilePhone }) => ({
+      id,
+      address,
+      city,
+      postalCode,
+      country,
+      mobilePhone,
+    }),
+  );
 };
 
 export const userFilter = (user: UserEntity): RegisterUserResponse => {

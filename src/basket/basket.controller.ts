@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -13,6 +12,7 @@ import { CreateBasketDto } from './dto/create-basket.dto';
 import {
   AddToBasketResponse,
   BasketFilterResponse,
+  //  BasketTotalPriceResponse,
   RemoveProductFromBasket,
 } from '../types';
 import { AuthGuard } from '@nestjs/passport';
@@ -38,11 +38,13 @@ export class BasketController {
     return this.basketService.showBasket(user);
   }
 
-  @Get('/total-price' /*/total-price/:id*/)
+  /*  @Get('/total-price')
   @UseGuards(AuthGuard('jwt'))
-  getTotalPrice(@UserObj() user: UserEntity): Promise<number> {
+  getTotalPrice(
+    @UserObj() user: UserEntity,
+  ): Promise<BasketTotalPriceResponse> {
     return this.basketService.getTotalPrice(user);
-  }
+  }*/
 
   @Delete('/all')
   @UseGuards(AuthGuard('jwt'))

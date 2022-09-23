@@ -39,20 +39,25 @@ export interface CreateUserAddressResponse {
   isSuccess: boolean;
 }
 
-export type UserAddressResponse = Omit<UserAddressInterface, 'id'>;
-
 export interface UserInfoSuccessfulResponse {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  address: UserAddressResponse[];
+  address: UserAddressInterface[];
 }
 
 export interface UserInfoFailedResponse {
   isSuccess: false;
   message: string;
 }
+
+export type UserOneAddressResponse =
+  | UserAddressInterface
+  | {
+      isSuccess: boolean;
+      message: string;
+    };
 
 export type UserInfoResponse =
   | UserInfoSuccessfulResponse

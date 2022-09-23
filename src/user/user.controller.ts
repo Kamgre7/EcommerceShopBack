@@ -17,10 +17,11 @@ import { UserEntity } from './entities/user.entity';
 import { Roles } from '../decorators/roles.decorator';
 import {
   UserActivationInterface,
-  UserAddressResponse,
+  UserAddressInterface,
   UserDeleteAccount,
   UserEditPwdInterface,
   UserInfoResponse,
+  UserOneAddressResponse,
   UserRole,
 } from '../types';
 import { RolesGuard } from '../guards/roles.guard';
@@ -70,6 +71,23 @@ export class UserController {
     return this.userService.findAllUsers();
   }
 
+  @Get('/address/')
+  @UseGuards(AuthGuard('jwt'))
+  findUserAddress(
+    @UserObj() user: UserEntity,
+  ): Promise<UserAddressInterface[]> {
+    return this.userService.findUserAddress(user);
+  }
+
+  @Get('/address/:addressId')
+  @UseGuards(AuthGuard('jwt'))
+  findOneUserAddress(
+    @Param('addressId') addressId: string,
+    @UserObj() user: UserEntity,
+  ): Promise<UserOneAddressResponse> {
+    return this.userService.findOneUserAddress(addressId, user);
+  }
+
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'))
   findOneUser(
@@ -77,12 +95,6 @@ export class UserController {
     @UserObj() user: UserEntity,
   ): Promise<UserInfoResponse> {
     return this.userService.findOneUser(user, userId);
-  }
-
-  @Get('/address/')
-  @UseGuards(AuthGuard('jwt'))
-  findUserAddress(@UserObj() user: UserEntity): Promise<UserAddressResponse[]> {
-    return this.userService.findUserAddress(user);
   }
 
   @Delete('/:userId')

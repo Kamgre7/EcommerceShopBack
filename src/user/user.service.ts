@@ -14,10 +14,11 @@ import {
   CreateUserAddressResponse,
   RegisterUserResponse,
   UserActivationInterface,
-  UserAddressResponse,
+  UserAddressInterface,
   UserDeleteAccount,
   UserEditPwdInterface,
   UserInfoResponse,
+  UserOneAddressResponse,
 } from '../types';
 import { BasketEntity } from '../basket/entities/basket.entity';
 import { MailService } from '../mail/mail.service';
@@ -138,8 +139,31 @@ export class UserService {
     return users.map((user) => userInfoFilter(user));
   }
 
-  async findUserAddress(user: UserEntity): Promise<UserAddressResponse[]> {
-    return userAddressFilter(user);
+  async findUserAddress(user: UserEntity): Promise<UserAddressInterface[]> {
+    const userAddressInfo = await UserEntity.findOne({
+      where: {
+        id: user.id,
+      },
+      relations: ['address'],
+    });
+
+    return userAddressFilter(userAddressInfo);
+  }
+
+  async findOneUserAddress(
+    addressId: string,
+    user: UserEntity,
+  ): Promise<UserOneAddressResponse> {
+    const singleUserAddress = await UserAddressEntity.findOne({
+      where: {
+        id: addressId,
+        user: user.valueOf(),
+      },
+    });
+
+    return (
+      singleUserAddress ?? { isSuccess: false, message: 'Address not found' }
+    );
   }
 
   async activateUserAccount(token: string): Promise<UserActivationInterface> {
@@ -195,6 +219,7 @@ export class UserService {
     }
 
     user.pwdHash = newPassword;
+    user.modifiedAt = new Date();
     await user.save();
 
     await this.mailService.sendUserEditPwdMail(

@@ -5,6 +5,7 @@ import { BasketEntity } from './entities/basket.entity';
 import {
   AddToBasketResponse,
   BasketFilterResponse,
+  BasketTotalPriceResponse,
   RemoveProductFromBasket,
 } from '../types';
 import { basketFilter } from '../utils/basket-filter';
@@ -85,21 +86,27 @@ export class BasketService {
       relations: ['product'],
     });
 
-    /*
-        .map((item) => basketFilter(item));
-    * */
     return await Promise.all(
       basket.map(async (item) => await basketFilter(item)),
     );
   }
 
-  async getTotalPrice(user: UserEntity): Promise<number> {
+  async getTotalPrice(user: UserEntity): Promise<BasketTotalPriceResponse> {
     const basketItems = await this.showBasket(user);
-
-    return basketItems.reduce(
+    const basketItemsQuantity = basketItems.reduce(
+      (prev, curr) => prev + curr.quantity,
+      0,
+    );
+    const basketValue = basketItems.reduce(
       (prev, curr) => prev + curr.quantity * curr.product.price,
       0,
     );
+
+    return {
+      totalPrice: basketValue,
+      totalItems: basketItemsQuantity,
+      itemsType: basketItems.length,
+    };
   }
 
   async removeItem(

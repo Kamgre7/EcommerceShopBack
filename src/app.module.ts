@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
@@ -9,19 +9,21 @@ import { BasketModule } from './basket/basket.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { CheckoutModule } from './checkout/checkout.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    forwardRef(() => DatabaseModule),
-    forwardRef(() => ProductModule),
-    forwardRef(() => CategoryModule),
-    forwardRef(() => BasketModule),
-    forwardRef(() => UserModule),
-    forwardRef(() => AuthModule),
-    forwardRef(() => MailModule),
+    DatabaseModule,
+    ProductModule,
+    CategoryModule,
+    BasketModule,
+    UserModule,
+    AuthModule,
+    MailModule,
+    CheckoutModule,
   ],
   controllers: [AppController],
   providers: [AppService],
