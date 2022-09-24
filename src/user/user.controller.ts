@@ -84,7 +84,7 @@ export class UserController {
   findOneUserAddress(
     @Param('addressId') addressId: string,
     @UserObj() user: UserEntity,
-  ): Promise<UserOneAddressResponse> {
+  ): Promise<UserAddressInterface | null> {
     return this.userService.findOneUserAddress(addressId, user);
   }
 

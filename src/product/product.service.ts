@@ -154,6 +154,25 @@ export class ProductService {
     return product !== null ? product : null;
   }
 
+  async updateProductInventory(id: string, boughtQuantity) {
+    const product = await this.findOneProduct(id);
+
+    const productInventory = await ProductInventoryEntity.findOne({
+      where: {
+        product: product.valueOf(),
+      },
+    });
+
+    productInventory.quantity -= boughtQuantity;
+    await productInventory.save();
+  }
+
+  async updateProductBoughtCounter(id: string, boughtQuantity) {
+    const product = await this.findOneProduct(id);
+    product.boughtCounter += boughtQuantity;
+    await product.save();
+  }
+
   async findBestSoldProduct(): Promise<ProductFilterResponse[]> {
     const topProducts = await ProductEntity.find({
       order: {

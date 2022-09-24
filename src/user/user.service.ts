@@ -18,7 +18,6 @@ import {
   UserDeleteAccount,
   UserEditPwdInterface,
   UserInfoResponse,
-  UserOneAddressResponse,
 } from '../types';
 import { BasketEntity } from '../basket/entities/basket.entity';
 import { MailService } from '../mail/mail.service';
@@ -153,7 +152,7 @@ export class UserService {
   async findOneUserAddress(
     addressId: string,
     user: UserEntity,
-  ): Promise<UserOneAddressResponse> {
+  ): Promise<UserAddressInterface | null> {
     const singleUserAddress = await UserAddressEntity.findOne({
       where: {
         id: addressId,
@@ -161,9 +160,7 @@ export class UserService {
       },
     });
 
-    return (
-      singleUserAddress ?? { isSuccess: false, message: 'Address not found' }
-    );
+    return singleUserAddress ?? null;
   }
 
   async activateUserAccount(token: string): Promise<UserActivationInterface> {
