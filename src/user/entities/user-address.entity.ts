@@ -3,10 +3,12 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserAddressInterface } from '../../types';
 import { UserEntity } from './user.entity';
+import { OrderEntity } from '../../checkout/entities/order.entity';
 
 @Entity()
 export class UserAddressEntity
@@ -43,4 +45,7 @@ export class UserAddressEntity
 
   @ManyToOne(() => UserEntity, (entity) => entity.address)
   user: UserEntity;
+
+  @OneToMany(() => OrderEntity, (entity) => entity.address)
+  orderAddress: OrderEntity;
 }

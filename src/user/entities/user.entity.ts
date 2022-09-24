@@ -8,6 +8,7 @@ import {
 import { UserInterface, UserRole } from '../../types';
 import { UserAddressEntity } from './user-address.entity';
 import { BasketEntity } from '../../basket/entities/basket.entity';
+import { OrderEntity } from '../../checkout/entities/order.entity';
 
 @Entity()
 export class UserEntity extends BaseEntity implements UserInterface {
@@ -76,4 +77,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
 
   @OneToMany(() => BasketEntity, (entity) => entity.user)
   userBasket: BasketEntity[];
+
+  @OneToMany(() => OrderEntity, (entity) => entity.user)
+  order: OrderEntity[];
 }

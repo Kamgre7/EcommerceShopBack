@@ -21,11 +21,11 @@ import {
   UserDeleteAccount,
   UserEditPwdInterface,
   UserInfoResponse,
-  UserOneAddressResponse,
   UserRole,
 } from '../types';
 import { RolesGuard } from '../guards/roles.guard';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
+import { UserAddressEntity } from './entities/user-address.entity';
 
 @Controller('/user')
 export class UserController {
@@ -84,7 +84,7 @@ export class UserController {
   findOneUserAddress(
     @Param('addressId') addressId: string,
     @UserObj() user: UserEntity,
-  ): Promise<UserAddressInterface | null> {
+  ): Promise<UserAddressEntity | null> {
     return this.userService.findOneUserAddress(addressId, user);
   }
 

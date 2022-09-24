@@ -152,7 +152,7 @@ export class UserService {
   async findOneUserAddress(
     addressId: string,
     user: UserEntity,
-  ): Promise<UserAddressInterface | null> {
+  ): Promise<UserAddressEntity | null> {
     const singleUserAddress = await UserAddressEntity.findOne({
       where: {
         id: addressId,

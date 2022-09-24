@@ -105,8 +105,6 @@ export class ProductService {
   async findAllProductByCategory(
     categoryName: string,
   ): Promise<FindProductByCategoryResponse> {
-    //const category = await this.categoryService.findOneCategory(categoryId);
-
     const category = await ProductCategoryEntity.findOne({
       where: {
         name: Like(`%${categoryName}%`),
@@ -159,7 +157,7 @@ export class ProductService {
 
     const productInventory = await ProductInventoryEntity.findOne({
       where: {
-        product: product.valueOf(),
+        id: product.productInventory.id,
       },
     });
 

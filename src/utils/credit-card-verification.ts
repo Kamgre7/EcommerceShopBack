@@ -8,8 +8,8 @@ export const creditCardVerification = (
   const { isValid: isValidCreditCard } = valid.number(creditCard, {
     luhnValidateUnionPay: true,
   });
-  const { isValid: isValidExpiratioNDate } = valid.expirationDate(expDate);
+  const { isValid: isValidExpirationDate } = valid.expirationDate(expDate);
   const { isValid: isValidCvc } = valid.cvv(creditCardCvc);
 
-  return isValidCreditCard && isValidExpiratioNDate && isValidCvc;
+  return isValidCreditCard && isValidExpirationDate && isValidCvc;
 };

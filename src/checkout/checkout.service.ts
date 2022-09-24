@@ -6,6 +6,8 @@ import { UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { creditCardVerification } from '../utils/credit-card-verification';
 import { ProductService } from '../product/product.service';
+import { OrderEntity } from './entities/order.entity';
+import { orderFilter } from '../utils/order-filter';
 
 @Injectable()
 export class CheckoutService {
@@ -41,19 +43,31 @@ export class CheckoutService {
     }
 
     const basket = await this.basketService.showBasket(user);
+    const { totalPrice } = await this.basketCheckout(user);
+
+    const newOrder = new OrderEntity();
+    newOrder.total = totalPrice;
+    newOrder.items = JSON.stringify(basket);
+
+    await newOrder.save();
+
+    newOrder.user = user;
+    newOrder.address = userAddress;
+    await newOrder.save();
 
     for await (const item of basket) {
       await this.productService.updateProductInventory(
         item.product.id,
         item.quantity,
       );
+
       await this.productService.updateProductBoughtCounter(
         item.product.id,
         item.quantity,
       );
-
-      await this.basketService.clearBasket(user);
     }
+
+    await this.basketService.clearBasket(user);
 
     return {
       isSuccess: true,
@@ -63,5 +77,27 @@ export class CheckoutService {
 
   async basketCheckout(user): Promise<CheckoutTotalPriceResponse> {
     return await this.basketService.getTotalPrice(user);
+  }
+
+  async orderHistory(user: UserEntity) {
+    const order = await OrderEntity.find({
+      where: {
+        user: user.valueOf(),
+      },
+      relations: ['address'],
+    });
+    return order.map((item) => orderFilter(item));
+  }
+
+  async singleOrderInfo(orderId: string, user: UserEntity) {
+    const order = await OrderEntity.findOne({
+      where: {
+        id: orderId,
+        user: user.valueOf(),
+      },
+      relations: ['address'],
+    });
+
+    return order ? orderFilter(order) : null;
   }
 }
