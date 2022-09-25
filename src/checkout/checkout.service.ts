@@ -8,6 +8,7 @@ import { creditCardVerification } from '../utils/credit-card-verification';
 import { ProductService } from '../product/product.service';
 import { OrderEntity } from './entities/order.entity';
 import { orderFilter } from '../utils/order-filter';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class CheckoutService {
@@ -18,6 +19,8 @@ export class CheckoutService {
     private userService: UserService,
     @Inject(forwardRef(() => ProductService))
     private productService: ProductService,
+    @Inject(forwardRef(() => MailService))
+    private mailService: MailService,
   ) {}
 
   async placeOrder(createCheckoutDto: CreateCheckoutDto, user: UserEntity) {
@@ -68,6 +71,19 @@ export class CheckoutService {
     }
 
     await this.basketService.clearBasket(user);
+
+    await this.mailService.sendUserOrderMail(
+      user.email,
+      'Ecommerce shop - Order confirmation',
+      {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        orderId: newOrder.id,
+        totalPrice,
+        address: userAddress,
+        basket,
+      },
+    );
 
     return {
       isSuccess: true,

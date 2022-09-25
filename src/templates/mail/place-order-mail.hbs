@@ -1,0 +1,23 @@
+<p>Hello {{ firstName }} {{lastName}},</p>
+<p>Thanks for placing order in our shop</p>
+<p>There are some details of you order:</p>
+<p>Order number: {{orderId}}</p>
+<p>Total price: {{totalPrice}}</p>
+<p>Your order items:</p>
+<ul>
+  {{#each basket}}
+    <li>
+      <p>{{this.product.name}}</p>
+      <p>Ordered quantity: {{this.quantity}}</p>
+      <p>Price per one: {{this.product.price}}</p>
+    </li>
+  {{/each}}
+</ul>
+<p>Order will be delivery to:</p>
+<p>
+  {{address.address}}
+  {{address.city}}
+  {{address.postalCode}}
+  {{address.country}}
+</p>
+<p>If you have any questions, contact us!</p>

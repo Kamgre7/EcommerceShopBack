@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { SendMailInterface } from '../types';
+import { CheckoutOrderInfo, SendMailInterface } from '../types';
 
 @Injectable()
 export class MailService {
@@ -51,6 +51,32 @@ export class MailService {
         context: {
           firstName,
           lastName,
+        },
+      });
+      return {
+        isSuccess: true,
+        message: 'Email sent successfully!!',
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        message: error.message,
+      };
+    }
+  }
+
+  async sendUserOrderMail(
+    to: string,
+    subject: string,
+    orderInformation: CheckoutOrderInfo,
+  ): Promise<SendMailInterface> {
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject,
+        template: './place-order-mail',
+        context: {
+          ...orderInformation,
         },
       });
       return {
