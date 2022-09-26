@@ -152,7 +152,7 @@ export class ProductService {
     return product !== null ? product : null;
   }
 
-  async updateProductInventory(id: string, boughtQuantity) {
+  async updateProductInventory(id: string, boughtQuantity): Promise<void> {
     const product = await this.findOneProduct(id);
 
     const productInventory = await ProductInventoryEntity.findOne({
@@ -165,7 +165,7 @@ export class ProductService {
     await productInventory.save();
   }
 
-  async updateProductBoughtCounter(id: string, boughtQuantity) {
+  async updateProductBoughtCounter(id: string, boughtQuantity): Promise<void> {
     const product = await this.findOneProduct(id);
     product.boughtCounter += boughtQuantity;
     await product.save();

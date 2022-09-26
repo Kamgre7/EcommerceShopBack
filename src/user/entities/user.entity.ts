@@ -48,6 +48,8 @@ export class UserEntity extends BaseEntity implements UserInterface {
   currentTokenId: string;
 
   @Column({
+    type: 'enum',
+    enum: UserRole,
     default: UserRole.USER,
   })
   role: UserRole;

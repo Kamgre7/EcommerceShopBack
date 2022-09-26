@@ -77,7 +77,9 @@ export class AuthService {
         .json({
           isSuccess: true,
           userFirstName: user.firstName,
+          userLastName: user.lastName,
           userId: user.id,
+          userRole: user.role,
         });
     } catch (e) {
       return res.json({

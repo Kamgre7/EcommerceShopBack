@@ -1,7 +1,11 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 import { BasketService } from '../basket/basket.service';
-import { CheckoutTotalPriceResponse } from '../types';
+import {
+  CheckoutOrderHistoryResponse,
+  CheckoutPlaceOrderResponse,
+  CheckoutTotalPriceResponse,
+} from '../types';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { creditCardVerification } from '../utils/credit-card-verification';
@@ -23,7 +27,10 @@ export class CheckoutService {
     private mailService: MailService,
   ) {}
 
-  async placeOrder(createCheckoutDto: CreateCheckoutDto, user: UserEntity) {
+  async placeOrder(
+    createCheckoutDto: CreateCheckoutDto,
+    user: UserEntity,
+  ): Promise<CheckoutPlaceOrderResponse> {
     const { userAddressId, creditCard, creditCardCvc, expDate } =
       createCheckoutDto;
     const userAddress = await this.userService.findOneUserAddress(
@@ -95,7 +102,9 @@ export class CheckoutService {
     return await this.basketService.getTotalPrice(user);
   }
 
-  async orderHistory(user: UserEntity) {
+  async orderHistory(
+    user: UserEntity,
+  ): Promise<CheckoutOrderHistoryResponse[]> {
     const order = await OrderEntity.find({
       where: {
         user: user.valueOf(),
@@ -105,7 +114,10 @@ export class CheckoutService {
     return order.map((item) => orderFilter(item));
   }
 
-  async singleOrderInfo(orderId: string, user: UserEntity) {
+  async singleOrderInfo(
+    orderId: string,
+    user: UserEntity,
+  ): Promise<CheckoutOrderHistoryResponse> {
     const order = await OrderEntity.findOne({
       where: {
         id: orderId,
