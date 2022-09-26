@@ -1,73 +1,407 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# E-commerce Shop Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+E-commerdce Shop App is a shop application created to learn new techniques using framework
+**NestJS**. Code was formetted using eslint. Project is a backend api for e-commerce shop
+application.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+[Frontend of application](https://github.com/Kamgre7/EcommerceShopFront)
 
-## Description
+### 🚀 Technologies
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js
+- NestJS
+- TypeScript
+- PassportJS
+- Nodemailer
+- Multer
+- Mysql2
+- TypeORM
+- Handlebars
 
-## Installation
+
+### ✅ Requirements
+Before starting, you need to have Git and Node installed.
+
+### 🏁 Running the app
 
 ```bash
+# Clone the project
+$ git clone https://link-to-project
+
+# Go to the project directory
+$ cd my-project
+
+# Install dependencies
 $ npm install
-```
 
-## Running the app
-
-```bash
-# development
+# Start the server
 $ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
 
-```bash
-# unit tests
-$ npm run test
+### 🛠 Main API Reference
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+#### **AUTH EP**
+
+#### User login request
+
+```http
+  POST /auth/login
 ```
 
-## Support
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `email` | `string` | User email `REQUIRED`
+| `password` | `string` | User password `REQUIRED`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+#### User logout request
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```http
+  GET /auth/logout
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
 
-## License
+&nbsp;
+#### **BASKET EP**
 
-Nest is [MIT licensed](LICENSE).
+#### Add items to basket
+
+```http
+  POST /basket
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `productId` | `string` | product ID `REQUIRED`
+| `quantity` | `number` | quantity `REQUIRED`
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+#### Show user basket
+
+```http
+  GET /basket
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+#### Delete single item in basket
+
+```http
+  DELETE /basket/:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`      | `string` | id of single basket item `REQUIRED` |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+#### Clear basket of all items
+
+```http
+  DELETE /basket
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+&nbsp;
+#### **CATEGORY EP**
+
+#### Create category
+
+```http
+  POST /category
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | new category name `REQUIRED`
+| `description`      | `string` | new category description `REQUIRED` |
+| `photo`      | `file` | category photo|
+| `user`      | `UserEntity` | Admin must be logged in`REQUIRED` |
+
+
+#### Show categories
+
+```http
+  GET /category
+```
+
+#### Show single category
+
+```http
+  GET /category/:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`      | `string` | id of single category `REQUIRED` |
+
+#### Show category photo
+
+```http
+  GET /category/photo/:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`      | `string` | id of single category `REQUIRED` |
+
+&nbsp;
+#### **CHECKOUT EP**
+
+#### Place order
+
+```http
+  POST /checkout/order
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `userAddresId` | `string` | user address ID `REQUIRED`
+| `creditCard`      | `string` | user credit card number `REQUIRED` |
+| `expDate`      | `string` | user credit card expiration date `REQUIRED`
+| `creditCardCvc`      | `string` | creadit card cvc number `REQUIRED`|
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+#### Show all orders of user
+
+```http
+  GET /checkout/order/history
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+#### Show single user order
+
+```http
+  GET /checkout/order/history/:id
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id`      | `string` | id of single order `REQUIRED` |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+
+#### Show basket checkout
+
+```http
+  GET /checkout
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+&nbsp;
+#### **PRODUCT EP**
+
+#### Create product
+
+```http
+  POST /product
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | new product name `REQUIRED`
+| `description`      | `string` | new product description `REQUIRED` |
+| `price`      | `number` | product price `REQUIRED` |
+| `quantity`      | `number` | product quantity `REQUIRED` |
+| `sku`      | `string` | product sku number `REQUIRED` |
+| `categoryId`      | `string` | product category id `REQUIRED` |
+| `photo`      | `file` | product photo|
+| `user`      | `UserEntity` | Admin must be logged in`REQUIRED` |
+
+
+#### Show products
+
+```http
+  GET /product
+```
+
+#### Show top sold products
+
+```http
+  GET /product/ranking
+```
+
+#### Find products by category
+
+```http
+  GET /product/category/:categoryName
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `categoryName`      | `string` | name of category `REQUIRED` |
+
+#### Find products by search bar
+
+```http
+  GET /product/find/:searchTerm
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `productId`      | `string` | name of search product `REQUIRED` |
+
+
+#### Show single product
+
+```http
+  GET /product/:productId
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `productId`      | `string` | ID of product `REQUIRED` |
+
+
+#### Delete product
+
+```http
+  DELETE /product/:productId
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `productId`      | `string` | ID of product `REQUIRED` |
+| `user`      | `UserEntity` | Admin must be logged in`REQUIRED` |
+
+
+&nbsp;
+#### **USER EP**
+
+#### Register user
+
+```http
+  POST /user/register
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `firstName` | `string` | user first name `REQUIRED`
+| `lastName`      | `string` | user last name `REQUIRED` |
+| `email`      | `string` | user email `REQUIRED` |
+| `password`      | `string` | user password `REQUIRED` |
+| `address`      | `string` | street and local number `REQUIRED` |
+| `city`      | `string` | city `REQUIRED` |
+| `postalCode`      | `string` | postal code `REQUIRED`|
+| `country`      | `string` |country `REQUIRED` |
+| `mobilePhone`      | `number` | mobile phone `REQUIRED` |
+
+
+#### Add user address
+
+```http
+  POST /user/address
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `address`      | `string` | street and local number `REQUIRED` |
+| `city`      | `string` | city `REQUIRED` |
+| `postalCode`      | `string` | postal code `REQUIRED`|
+| `country`      | `string` |country `REQUIRED` |
+| `mobilePhone`      | `number` | mobile phone `REQUIRED` |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+
+#### Change user password
+
+```http
+  PATCH /user/edit/password
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `currentPassword`      | `string` | current password `REQUIRED` |
+| `newPassword`      | `string` | new password `REQUIRED` |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+
+#### Activate user account
+
+```http
+  GET /user/activate/:token
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `token`      | `string` | generated activation token `REQUIRED` |
+
+
+#### Show all users
+
+```http
+  GET /user
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user`      | `UserEntity` | Admin must be logged in`REQUIRED` |
+
+
+#### Show single user
+
+```http
+  GET /user/:userId
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `userId`      | `string` | user ID`REQUIRED` |
+| `user`      | `UserEntity` | Admin/User must be logged in`REQUIRED` |
+
+
+#### Find user addresses
+
+```http
+  GET /user/address
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `user`      | `UserEntity` | User must be logged in`REQUIRED` |
+
+
+#### Find a single user address
+
+```http
+  GET /user/address/:addressId
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `addressId`      | `string` |user address ID `REQUIRED` |
+| `user`      | `UserEntity` | User must be logged in`REQUIRED` |
+
+
+#### Detele user account
+
+```http
+  GET /user/:userId
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `userId`      | `string` | ID of user `REQUIRED` |
+| `user`      | `UserEntity` | User must be logged in`REQUIRED` |
+
+
+## Authors
+
+[@Kamgre7](https://github.com/Kamgre7/)
+
+
