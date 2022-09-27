@@ -402,7 +402,7 @@ $ npm run start
 &nbsp;
 ### 🚩 Database structure
 &nbsp;
-![img.png](img.png)
+![img_1](https://user-images.githubusercontent.com/105069884/192585448-ae06676e-0d05-4492-952f-201144ce588a.png)
 
 
 ### 🛠 Example of API calls
@@ -412,55 +412,63 @@ $ npm run start
 
 - user account activation
 
-![img_1.png](img_1.png)
+![img_4](https://user-images.githubusercontent.com/105069884/192585657-07dd51ac-4268-424f-af5b-62f6affb0652.png)
 
 - user login
 
-![img_2.png](img_2.png)
+![img_5](https://user-images.githubusercontent.com/105069884/192585687-275ab654-9e9f-4354-9fc6-a78327a16021.png)
 
 - change user password
 
-![img_9.png](img_9.png)
+![img_6](https://user-images.githubusercontent.com/105069884/192585719-af249b85-abf5-47ae-98eb-d5199760f538.png)
 
 - get product list
 
-![img_3.png](img_3.png)
+![img_9](https://user-images.githubusercontent.com/105069884/192585811-7a622a3c-4126-40aa-9a4b-56af57652e28.png)
+
+- add product - admin required
+
+![img_10](https://user-images.githubusercontent.com/105069884/192585859-772d7270-c3f5-471d-ba64-6303f77d1baa.png)
 
 - get category list
 
-![img_4.png](img_4.png)
+![image](https://user-images.githubusercontent.com/105069884/192586139-9b6fa05b-1459-4def-91c1-c14c6ed1d462.png)
+
+- add category - admin required
+
+![img_11](https://user-images.githubusercontent.com/105069884/192586042-181b61f1-53af-4cee-af6d-0a17881765d6.png)
 
 - add item to basket
 
-![img_5.png](img_5.png)
+![img_12](https://user-images.githubusercontent.com/105069884/192586174-9cdaa739-a353-4924-8bcc-c9c36fe49131.png)
 
 - get basket item list
 
-![img_6.png](img_6.png)
+![img_13](https://user-images.githubusercontent.com/105069884/192586199-4b649b4f-ca75-401a-ae67-40367c56a0d3.png)
 
 - remove item from basketId
 
-![img_7.png](img_7.png)
+![img_14](https://user-images.githubusercontent.com/105069884/192586226-a026bf73-733b-4a9a-b888-5f47742adac8.png)
 
 - add additional user address
 
-![img_8.png](img_8.png)
+![img_15](https://user-images.githubusercontent.com/105069884/192586250-985fc2f9-473b-4136-bc1a-1b71a7cd34a5.png)
 
 - get all user addresses
 
-![img_10.png](img_10.png)
+![img_16](https://user-images.githubusercontent.com/105069884/192586272-8023fa0e-9332-4b0a-82fe-93a5252208ce.png)
 
 - checkout information
 
-![img_11.png](img_11.png)
+![img_17](https://user-images.githubusercontent.com/105069884/192586300-ea3fb1b5-42e8-43eb-a4f0-4b5aefc14b22.png)
 
 - place an order
 
-![img_12.png](img_12.png)
+![img_18](https://user-images.githubusercontent.com/105069884/192586319-fc378d43-85d1-42c2-b032-aec2e8a5ba55.png)
 
 - order history
 
-![img_13.png](img_13.png)
+![img_19](https://user-images.githubusercontent.com/105069884/192586340-e684e7b2-cb58-4965-9c9c-5ba63e3d0396.png)
 
 ### 🧭 TODO
 - product panel - filtering items by the options selected by user
