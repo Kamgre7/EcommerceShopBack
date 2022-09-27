@@ -399,9 +399,78 @@ $ npm run start
 | `userId`      | `string` | ID of user `REQUIRED` |
 | `user`      | `UserEntity` | User must be logged in`REQUIRED` |
 
+&nbsp;
+### 🚩 Database structure
+&nbsp;
+![img.png](img.png)
 
-## Authors
+
+### 🛠 Example of API calls
+- user register
+
+![image](https://user-images.githubusercontent.com/105069884/192571379-59d2e5e1-2264-45cf-abc0-da28a609afab.png)
+
+- user account activation
+
+![img_1.png](img_1.png)
+
+- user login
+
+![img_2.png](img_2.png)
+
+- change user password
+
+![img_9.png](img_9.png)
+
+- get product list
+
+![img_3.png](img_3.png)
+
+- get category list
+
+![img_4.png](img_4.png)
+
+- add item to basket
+
+![img_5.png](img_5.png)
+
+- get basket item list
+
+![img_6.png](img_6.png)
+
+- remove item from basketId
+
+![img_7.png](img_7.png)
+
+- add additional user address
+
+![img_8.png](img_8.png)
+
+- get all user addresses
+
+![img_10.png](img_10.png)
+
+- checkout information
+
+![img_11.png](img_11.png)
+
+- place an order
+
+![img_12.png](img_12.png)
+
+- order history
+
+![img_13.png](img_13.png)
+
+### 🧭 TODO
+- product panel - filtering items by the options selected by user
+- user panel - option to change user information
+- unit testing
+- refactor code
+
+### Author
 
 [@Kamgre7](https://github.com/Kamgre7/)
+
 
 
