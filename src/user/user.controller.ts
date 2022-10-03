@@ -71,6 +71,14 @@ export class UserController {
     return this.userService.findAllUsers();
   }
 
+  @Get('/check')
+  @UseGuards(AuthGuard('jwt'))
+  checkIfUserLogged(
+    @UserObj() user: UserEntity,
+  ): Promise<UserInfoResponse | null> {
+    return this.userService.checkIfUserLogged(user);
+  }
+
   @Get('/address/')
   @UseGuards(AuthGuard('jwt'))
   findUserAddress(
