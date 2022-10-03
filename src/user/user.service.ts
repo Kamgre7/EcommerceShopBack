@@ -23,6 +23,7 @@ import { BasketEntity } from '../basket/entities/basket.entity';
 import { MailService } from '../mail/mail.service';
 import { userActivationToken } from '../utils/user-activation-token';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
+import { IsNull, Not } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -129,6 +130,18 @@ export class UserService {
       relations: ['address'],
     });
     return userInfoFilter(userInfo);
+  }
+
+  async checkIfUserLogged(user: UserEntity): Promise<UserInfoResponse | null> {
+    const userInfo = await UserEntity.findOne({
+      where: {
+        id: user.id,
+        currentTokenId: Not(IsNull()),
+      },
+      relations: ['address'],
+    });
+
+    return userInfo ? userInfoFilter(userInfo) : null;
   }
 
   async findAllUsers(): Promise<UserInfoResponse[]> {
