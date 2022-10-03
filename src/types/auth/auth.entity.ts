@@ -1,5 +1,4 @@
 import { UserRole } from '../user';
-import { IsString, Length } from 'class-validator';
 
 export interface LoginFailedResponse {
   isSuccess: false;

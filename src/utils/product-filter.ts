@@ -26,6 +26,6 @@ export const productFilter = (
     boughtCounter,
     photoFileName,
     description,
-    category: category.name,
+    category: category.id,
   };
 };
