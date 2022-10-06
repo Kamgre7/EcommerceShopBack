@@ -1,4 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { IsNull, Not } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { hashPassword, randomSalt } from '../utils/hash-password';
@@ -19,17 +20,21 @@ import {
   UserEditPwdInterface,
   UserInfoResponse,
 } from '../types';
-import { BasketEntity } from '../basket/entities/basket.entity';
 import { MailService } from '../mail/mail.service';
 import { userActivationToken } from '../utils/user-activation-token';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
-import { IsNull, Not } from 'typeorm';
+import { BasketService } from '../basket/basket.service';
+import { CheckoutService } from '../checkout/checkout.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(forwardRef(() => MailService))
     private mailService: MailService,
+    @Inject(forwardRef(() => BasketService))
+    private basketService: BasketService,
+    @Inject(forwardRef(() => CheckoutService))
+    private checkoutService: CheckoutService,
   ) {}
 
   private static async createUserAddress(
@@ -256,9 +261,8 @@ export class UserService {
       };
     }
 
-    await BasketEntity.delete({
-      user: user.valueOf(),
-    });
+    await this.basketService.clearBasket(user);
+    await this.checkoutService.clearOrderHistory(user);
 
     await UserAddressEntity.delete({
       user: user.valueOf(),
