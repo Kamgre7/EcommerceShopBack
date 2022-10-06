@@ -6,10 +6,12 @@ import {
   AddToBasketResponse,
   BasketFilterResponse,
   BasketTotalPriceResponse,
+  BasketUpdateResponse,
   RemoveProductFromBasket,
 } from '../types';
 import { basketFilter } from '../utils/basket-filter';
 import { UserEntity } from '../user/entities/user.entity';
+import { UpdateBasketDto } from './dto/update-basket.dto';
 
 @Injectable()
 export class BasketService {
@@ -76,6 +78,50 @@ export class BasketService {
 
       return { isSuccess: true, id: basket.id };
     }
+  }
+
+  async changeItemQuantity(
+    updateBasketDto: UpdateBasketDto,
+    user: UserEntity,
+  ): Promise<BasketUpdateResponse> {
+    const { quantity, basketId } = updateBasketDto;
+    const basket = await BasketEntity.findOne({
+      where: {
+        id: basketId,
+        user: user.valueOf(),
+      },
+      relations: ['product', 'user'],
+    });
+
+    if (!basket) {
+      return {
+        isSuccess: false,
+        message: "Basket doesn't exist'",
+      };
+    }
+
+    const product = await this.productService.findOneProduct(basket.product.id);
+
+    if (basket.quantity + quantity > product.productInventory.quantity) {
+      return {
+        isSuccess: false,
+        message: 'Not enough stock quantity of product',
+      };
+    }
+
+    if (basket.quantity + quantity <= 0) {
+      return {
+        isSuccess: false,
+        message: 'Quantity cannot be negative or equal to zero',
+      };
+    }
+
+    basket.quantity += quantity;
+    await basket.save();
+
+    return {
+      isSuccess: true,
+    };
   }
 
   async showBasket(user: UserEntity): Promise<BasketFilterResponse[]> {

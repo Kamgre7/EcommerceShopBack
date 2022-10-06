@@ -30,3 +30,12 @@ export interface BasketTotalPriceResponse {
   totalItems: number;
   itemsType: number;
 }
+
+export type BasketUpdateResponse =
+  | {
+      isSuccess: false;
+      message: string;
+    }
+  | {
+      isSuccess: true;
+    };
