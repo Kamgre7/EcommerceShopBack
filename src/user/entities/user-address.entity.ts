@@ -39,7 +39,7 @@ export class UserAddressEntity
   country: string;
 
   @Column({
-    type: 'tinyint',
+    type: 'int',
   })
   mobilePhone: number;
 

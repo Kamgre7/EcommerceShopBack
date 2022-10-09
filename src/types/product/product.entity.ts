@@ -30,7 +30,6 @@ export interface ProductFilterResponse {
   description: string;
   sku: string;
   boughtCounter: number;
-  photoFileName: string;
 }
 
 export type CreateProductResponse =
