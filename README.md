@@ -22,14 +22,30 @@ application.
 ### ✅ Requirements
 Before starting, you need to have Git and Node installed.
 
-### 🏁 Running the app
+####Run locally - backend
 
 ```bash
 # Clone the project
-$ git clone https://link-to-project
+$ git clone https://github.com/Kamgre7/EcommerceShopBack.git
 
 # Go to the project directory
-$ cd my-project
+$ cd e-commerce-shop-back
+
+# Install dependencies
+$ npm install
+
+# Start the server
+$ npm run start
+```
+
+####Run locally - frontend
+
+```bash
+# Clone the project
+$ git clone https://github.com/Kamgre7/EcommerceShopFront.git
+
+# Go to the project directory
+$ cd ecommerce-shop-front
 
 # Install dependencies
 $ npm install
