@@ -22,7 +22,7 @@ application.
 ### ✅ Requirements
 Before starting, you need to have Git and Node installed.
 
-####Run locally - backend
+#### Run locally - backend
 
 ```bash
 # Clone the project
@@ -38,7 +38,7 @@ $ npm install
 $ npm run start
 ```
 
-####Run locally - frontend
+#### Run locally - frontend
 
 ```bash
 # Clone the project
