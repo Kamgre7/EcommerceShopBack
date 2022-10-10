@@ -79,3 +79,8 @@ export type UserDeleteAccount =
       isSuccess: false;
       message: string;
     };
+
+export interface EditUserInfoResponse {
+  isSuccess: true;
+  message: string;
+}

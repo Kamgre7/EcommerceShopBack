@@ -16,6 +16,7 @@ import { UserObj } from '../decorators/user-obj.decorator';
 import { UserEntity } from './entities/user.entity';
 import { Roles } from '../decorators/roles.decorator';
 import {
+  EditUserInfoResponse,
   UserActivationInterface,
   UserAddressInterface,
   UserDeleteAccount,
@@ -26,6 +27,7 @@ import {
 import { RolesGuard } from '../guards/roles.guard';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
+import { EditUserInfoDto } from './dto/edit-user-info.dto';
 
 @Controller('/user')
 export class UserController {
@@ -46,6 +48,15 @@ export class UserController {
       createUserAddressDto,
       user,
     );
+  }
+
+  @Patch('/edit')
+  @UseGuards(AuthGuard('jwt'))
+  editUserInfo(
+    @UserObj() user: UserEntity,
+    @Body() editUserInfoDto: EditUserInfoDto,
+  ): Promise<EditUserInfoResponse> {
+    return this.userService.editUserInfo(editUserInfoDto, user);
   }
 
   @Patch('/edit/password')

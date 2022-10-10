@@ -13,6 +13,7 @@ import {
 } from '../utils/user-filter';
 import {
   CreateUserAddressResponse,
+  EditUserInfoResponse,
   RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
@@ -25,6 +26,7 @@ import { userActivationToken } from '../utils/user-activation-token';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { BasketService } from '../basket/basket.service';
 import { CheckoutService } from '../checkout/checkout.service';
+import { EditUserInfoDto } from './dto/edit-user-info.dto';
 
 @Injectable()
 export class UserService {
@@ -38,15 +40,14 @@ export class UserService {
   ) {}
 
   private static async createUserAddress(
-    { city, address, country, mobilePhone, postalCode }: CreateUserAddressDto,
+    createUserAddress: CreateUserAddressDto,
     user: UserEntity,
   ) {
     const newUserAddress = new UserAddressEntity();
-    newUserAddress.address = address;
-    newUserAddress.city = city;
-    newUserAddress.country = country;
-    newUserAddress.mobilePhone = mobilePhone;
-    newUserAddress.postalCode = postalCode;
+
+    for (const [key, value] of Object.entries(createUserAddress)) {
+      newUserAddress[key] = value;
+    }
 
     await newUserAddress.save();
 
@@ -128,12 +129,14 @@ export class UserService {
         message: "You can't see another user profile",
       };
     }
+
     const userInfo = await UserEntity.findOne({
       where: {
         id: userId,
       },
       relations: ['address'],
     });
+
     return userInfoFilter(userInfo);
   }
 
@@ -153,6 +156,7 @@ export class UserService {
     const users = await UserEntity.find({
       relations: ['address'],
     });
+
     return users.map((user) => userInfoFilter(user));
   }
 
@@ -247,6 +251,29 @@ export class UserService {
     return {
       isSuccess: true,
       message: 'Password changed successfully',
+    };
+  }
+
+  async editUserInfo(
+    editUserInfo: EditUserInfoDto,
+    user: UserEntity,
+  ): Promise<EditUserInfoResponse> {
+    const userInfo = await UserEntity.findOne({
+      where: {
+        id: user.id,
+      },
+    });
+
+    for (const [key, value] of Object.entries(editUserInfo)) {
+      userInfo[key] = value;
+    }
+
+    userInfo.modifiedAt = new Date();
+    await userInfo.save();
+
+    return {
+      isSuccess: true,
+      message: 'User information updated successfully',
     };
   }
 
