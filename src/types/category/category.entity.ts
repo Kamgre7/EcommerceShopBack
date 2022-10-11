@@ -11,7 +11,6 @@ export interface CategoryFilterResponse {
   id: string;
   name: string;
   description: string;
-  photoFileName: string;
 }
 
 export type CreateCategoryResponse =

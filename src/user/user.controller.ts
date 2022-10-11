@@ -16,7 +16,10 @@ import { UserObj } from '../decorators/user-obj.decorator';
 import { UserEntity } from './entities/user.entity';
 import { Roles } from '../decorators/roles.decorator';
 import {
+  CreateUserAddressResponse,
   EditUserInfoResponse,
+  LoginResponse,
+  RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
   UserDeleteAccount,
@@ -34,7 +37,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/register')
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<RegisterUserResponse> {
     return this.userService.createUser(createUserDto);
   }
 
@@ -43,7 +48,7 @@ export class UserController {
   createUserAddress(
     @Body() createUserAddressDto: CreateUserAddressDto,
     @UserObj() user: UserEntity,
-  ) {
+  ): Promise<CreateUserAddressResponse> {
     return this.userService.createAdditionalUserAddress(
       createUserAddressDto,
       user,
@@ -86,7 +91,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   checkIfUserLogged(
     @UserObj() user: UserEntity,
-  ): Promise<UserInfoResponse | null> {
+  ): Promise<LoginResponse | null> {
     return this.userService.checkIfUserLogged(user);
   }
 
