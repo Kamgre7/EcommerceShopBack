@@ -76,10 +76,10 @@ export class AuthService {
         })
         .json({
           isSuccess: true,
-          userFirstName: user.firstName,
-          userLastName: user.lastName,
-          userId: user.id,
-          userRole: user.role,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          id: user.id,
+          role: user.role,
         });
     } catch (e) {
       return res.json({

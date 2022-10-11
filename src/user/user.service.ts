@@ -14,6 +14,7 @@ import {
 import {
   CreateUserAddressResponse,
   EditUserInfoResponse,
+  LoginResponse,
   RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
@@ -140,16 +141,23 @@ export class UserService {
     return userInfoFilter(userInfo);
   }
 
-  async checkIfUserLogged(user: UserEntity): Promise<UserInfoResponse | null> {
+  async checkIfUserLogged(user: UserEntity): Promise<LoginResponse | null> {
     const userInfo = await UserEntity.findOne({
       where: {
         id: user.id,
         currentTokenId: Not(IsNull()),
       },
-      relations: ['address'],
     });
 
-    return userInfo ? userInfoFilter(userInfo) : null;
+    return userInfo
+      ? {
+          isSuccess: true,
+          id: userInfo.id,
+          firstName: userInfo.id,
+          lastName: userInfo.lastName,
+          role: userInfo.role,
+        }
+      : null;
   }
 
   async findAllUsers(): Promise<UserInfoResponse[]> {

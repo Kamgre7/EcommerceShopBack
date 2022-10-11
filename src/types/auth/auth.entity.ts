@@ -7,10 +7,10 @@ export interface LoginFailedResponse {
 
 export interface LoginSuccessfulResponse {
   isSuccess: true;
-  userId: string;
-  userFirstName: string;
-  userLastName: string;
-  userRole: UserRole;
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
 }
 
 export type LoginResponse = LoginFailedResponse | LoginSuccessfulResponse;

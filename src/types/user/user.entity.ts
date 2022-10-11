@@ -45,6 +45,7 @@ export interface UserInfoSuccessfulResponse {
   lastName: string;
   email: string;
   address: UserAddressInterface[];
+  role: UserRole;
 }
 
 export interface UserInfoFailedResponse {
