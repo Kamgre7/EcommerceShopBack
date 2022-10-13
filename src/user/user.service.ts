@@ -153,7 +153,7 @@ export class UserService {
       ? {
           isSuccess: true,
           id: userInfo.id,
-          firstName: userInfo.id,
+          firstName: userInfo.firstName,
           lastName: userInfo.lastName,
           role: userInfo.role,
         }
