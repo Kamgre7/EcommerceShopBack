@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Res,
   UploadedFiles,
@@ -28,6 +29,7 @@ import { ProductEntity } from './entities/product.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
+import { EditProductInfoDto } from './dto/edit-product-info.dto';
 
 @Controller('/product')
 export class ProductController {
@@ -54,6 +56,13 @@ export class ProductController {
     @UploadedFiles() files: MulterDiskUploadedFiles,
   ): Promise<CreateProductResponse> {
     return this.productService.createNewProduct(createProductDto, files);
+  }
+
+  @Patch('/edit')
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  editProductInfo(@Body() editProductInfoDto: EditProductInfoDto) {
+    return this.productService.editProductInfo(editProductInfoDto);
   }
 
   @Get('/')
@@ -85,18 +94,18 @@ export class ProductController {
     return this.productService.findOneProduct(id);
   }
 
-  @Delete('/:id')
-  @Roles([UserRole.ADMIN])
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
-    return this.productService.removeProduct(id);
-  }
-
   @Get('/photo/:productId')
   findProductPhoto(
     @Param('productId') productId: string,
     @Res() res: Response,
   ): Promise<void> {
     return this.productService.findProductPhoto(productId, res);
+  }
+
+  @Delete('/:id')
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
+    return this.productService.removeProduct(id);
   }
 }

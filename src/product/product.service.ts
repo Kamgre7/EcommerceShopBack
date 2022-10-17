@@ -18,6 +18,7 @@ import { BasketService } from '../basket/basket.service';
 import { storageDir } from '../utils/storage';
 import { Like } from 'typeorm';
 import { ProductCategoryEntity } from '../category/entities/category.entity';
+import { EditProductInfoDto } from './dto/edit-product-info.dto';
 
 @Injectable()
 export class ProductService {
@@ -182,6 +183,43 @@ export class ProductService {
     });
 
     return topProducts.map((product) => productFilter(product));
+  }
+
+  async editProductInfo(editProductInfoDto: EditProductInfoDto) {
+    const product = await this.findOneProduct(editProductInfoDto.id);
+    const productInventory = await ProductInventoryEntity.findOne({
+      where: {
+        id: product.productInventory.id,
+      },
+    });
+    const category = await this.categoryService.findOneCategory(
+      editProductInfoDto.categoryId,
+    );
+
+    if (productInventory === null || category === null) {
+      return {
+        isSuccess: false,
+        message: 'Cannot find product or category',
+      };
+    }
+
+    for (const [key, value] of Object.entries(editProductInfoDto)) {
+      product[key] = value;
+    }
+
+    product.modifiedAt = new Date();
+    await product.save();
+
+    product.category = category;
+    await product.save();
+
+    productInventory.quantity = editProductInfoDto.quantity;
+    await productInventory.save();
+
+    return {
+      isSuccess: true,
+      message: 'Product updated successfully',
+    };
   }
 
   async removeProduct(id: string): Promise<RemoveProductResponse> {
