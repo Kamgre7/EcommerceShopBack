@@ -19,6 +19,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import {
   CreateProductResponse,
+  EditProductInfoResponse,
   FindProductByCategoryResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
@@ -61,7 +62,9 @@ export class ProductController {
   @Patch('/edit')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  editProductInfo(@Body() editProductInfoDto: EditProductInfoDto) {
+  editProductInfo(
+    @Body() editProductInfoDto: EditProductInfoDto,
+  ): Promise<EditProductInfoResponse> {
     return this.productService.editProductInfo(editProductInfoDto);
   }
 
