@@ -47,3 +47,8 @@ export type FindProductByCategoryResponse =
       isSuccess: false;
       message: string;
     };
+
+export interface EditProductInfoResponse {
+  isSuccess: boolean;
+  message: string;
+}

@@ -296,14 +296,31 @@ export class UserService {
       };
     }
 
-    await this.basketService.clearBasket(user);
-    await this.checkoutService.clearOrderHistory(user);
+    let userToDelete: UserEntity | null = user;
+
+    if (userId !== user.id) {
+      userToDelete = await UserEntity.findOne({
+        where: {
+          id: userId,
+        },
+      });
+    }
+
+    if (userToDelete === null) {
+      return {
+        isSuccess: false,
+        message: "Can't find a user",
+      };
+    }
+
+    await this.basketService.clearBasket(userToDelete);
+    await this.checkoutService.clearOrderHistory(userToDelete);
 
     await UserAddressEntity.delete({
-      user: user.valueOf(),
+      user: userToDelete.valueOf(),
     });
 
-    await user.remove();
+    await userToDelete.remove();
 
     return { isSuccess: true };
   }

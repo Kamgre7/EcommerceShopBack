@@ -6,6 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductEntity } from './entities/product.entity';
 import {
   CreateProductResponse,
+  EditProductInfoResponse,
   FindProductByCategoryResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
@@ -185,7 +186,9 @@ export class ProductService {
     return topProducts.map((product) => productFilter(product));
   }
 
-  async editProductInfo(editProductInfoDto: EditProductInfoDto) {
+  async editProductInfo(
+    editProductInfoDto: EditProductInfoDto,
+  ): Promise<EditProductInfoResponse> {
     const product = await this.findOneProduct(editProductInfoDto.id);
     const productInventory = await ProductInventoryEntity.findOne({
       where: {
@@ -227,7 +230,7 @@ export class ProductService {
       where: {
         id,
       },
-      relations: ['quantity'],
+      relations: ['productInventory'],
     });
 
     const productInventory = await ProductInventoryEntity.findOne({
