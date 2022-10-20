@@ -90,4 +90,32 @@ export class MailService {
       };
     }
   }
+
+  async sendUserAccountDeletedMail(
+    to: string,
+    subject: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<SendMailInterface> {
+    try {
+      await this.mailerService.sendMail({
+        to,
+        subject,
+        template: './delete-user-confirm-mail',
+        context: {
+          firstName,
+          lastName,
+        },
+      });
+      return {
+        isSuccess: true,
+        message: 'Email sent successfully!!',
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        message: error.message,
+      };
+    }
+  }
 }

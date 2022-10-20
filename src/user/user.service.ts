@@ -15,6 +15,7 @@ import {
   CreateUserAddressResponse,
   EditUserInfoResponse,
   LoginResponse,
+  RecoverUserPwdResponse,
   RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
@@ -28,6 +29,7 @@ import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { BasketService } from '../basket/basket.service';
 import { CheckoutService } from '../checkout/checkout.service';
 import { EditUserInfoDto } from './dto/edit-user-info.dto';
+import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 
 @Injectable()
 export class UserService {
@@ -285,6 +287,38 @@ export class UserService {
     };
   }
 
+  async recoverUserPassword(
+    recoverUserPwdDto: RecoverUserPwdDto,
+  ): Promise<RecoverUserPwdResponse> {
+    const { email, pwd } = recoverUserPwdDto;
+    const user = await UserEntity.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return {
+        isSuccess: false,
+        message: 'User not found',
+      };
+    }
+
+    if (!pwd) {
+      return { isSuccess: true };
+    }
+
+    user.pwdHash = hashPassword(pwd, user.pwdSalt);
+    user.modifiedAt = new Date();
+
+    await user.save();
+
+    return {
+      isSuccess: true,
+      message: 'Password changed successfully',
+    };
+  }
+
   async removeUser(
     userId: string,
     user: UserEntity,
@@ -321,6 +355,13 @@ export class UserService {
     });
 
     await userToDelete.remove();
+
+    await this.mailService.sendUserAccountDeletedMail(
+      userToDelete.email,
+      'Ecommerce - Deleted account confirmation',
+      userToDelete.firstName,
+      userToDelete.lastName,
+    );
 
     return { isSuccess: true };
   }
