@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Patch,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +20,7 @@ import {
   CreateUserAddressResponse,
   EditUserInfoResponse,
   LoginResponse,
+  RecoverUserPwdResponse,
   RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
@@ -31,6 +33,7 @@ import { RolesGuard } from '../guards/roles.guard';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
 import { EditUserInfoDto } from './dto/edit-user-info.dto';
+import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 
 @Controller('/user')
 export class UserController {
@@ -71,6 +74,13 @@ export class UserController {
     @Body() editUserPwdDto: EditUserPwdDto,
   ): Promise<UserEditPwdInterface> {
     return this.userService.editUserPassword(editUserPwdDto, user);
+  }
+
+  @Put('/recover-password')
+  recoverUserPassword(
+    @Body() recoverUserPwdDto: RecoverUserPwdDto,
+  ): Promise<RecoverUserPwdResponse> {
+    return this.userService.recoverUserPassword(recoverUserPwdDto);
   }
 
   @Get('/activate/:token')

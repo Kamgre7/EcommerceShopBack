@@ -85,3 +85,12 @@ export interface EditUserInfoResponse {
   isSuccess: true;
   message: string;
 }
+
+export type RecoverUserPwdResponse =
+  | {
+      isSuccess: boolean;
+      message: string;
+    }
+  | {
+      isSuccess: true;
+    };
