@@ -96,6 +96,18 @@ $ npm run start
 | `quantity` | `number` | quantity `REQUIRED`
 | `user`      | `UserEntity` | user must be logged in`REQUIRED` |
 
+#### Change item quantity in basket
+
+```http
+  POST /basket
+```
+
+| Parameter      | Type     | Description                |
+|:---------------| :------- | :------------------------- |
+| `basketId`        | `string` | basket ID `REQUIRED`
+| `quantity`     | `number` | quantity `REQUIRED`
+| `user`         | `UserEntity` | user must be logged in`REQUIRED` |
+
 #### Show user basket
 
 ```http
@@ -239,6 +251,23 @@ $ npm run start
 | `photo`      | `file` | product photo|
 | `user`      | `UserEntity` | Admin must be logged in`REQUIRED` |
 
+#### Edit product information
+
+```http
+  PATCH /product/edit
+```
+
+| Parameter     | Type     | Description                       |
+|:--------------| :------- |:----------------------------------|
+| `id`           | `string` | product ID `REQUIRED`             
+| `name`        | `string` | product name `REQUIRED`           
+| `description` | `string` | product description `REQUIRED`    |
+| `price`       | `number` | product price `REQUIRED`          |
+| `quantity`    | `number` | product quantity `REQUIRED`       |
+| `sku`         | `string` | product sku number `REQUIRED`     |
+| `categoryId`  | `string` | product category ID `REQUIRED`    |
+| `user`        | `UserEntity` | Admin must be logged in`REQUIRED` |
+
 
 #### Show products
 
@@ -255,17 +284,27 @@ $ npm run start
 #### Find products by category
 
 ```http
-  GET /product/category/:categoryName
+  GET /product/category/:categoryId
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `categoryName`      | `string` | name of category `REQUIRED` |
+| Parameter | Type     | Description              |
+|:----------| :------- |:-------------------------|
+| `categoryId`       | `string` | id of category `REQUIRED` |
 
 #### Find products by search bar
 
 ```http
   GET /product/find/:searchTerm
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `productId`      | `string` | name of search product `REQUIRED` |
+
+#### Find product photo
+
+```http
+  GET /product/photo/:productId
 ```
 
 | Parameter | Type     | Description                |
@@ -334,6 +373,20 @@ $ npm run start
 | `user`      | `UserEntity` | user must be logged in`REQUIRED` |
 
 
+#### Change user information
+
+```http
+  PATCH /user/edit/
+```
+
+| Parameter | Type     | Description                      |
+| :-------- | :------- |:---------------------------------|
+| `firstName`      | `string` | first name `REQUIRED`            |
+| `lastName`      | `string` | last name `REQUIRED`             |
+| `email`      | `string` | email `REQUIRED`                 |
+| `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+
 #### Change user password
 
 ```http
@@ -345,6 +398,18 @@ $ npm run start
 | `currentPassword`      | `string` | current password `REQUIRED` |
 | `newPassword`      | `string` | new password `REQUIRED` |
 | `user`      | `UserEntity` | user must be logged in`REQUIRED` |
+
+
+#### Recover password
+
+```http
+  PUT /user/recover-password
+```
+
+| Parameter     | Type     | Description                      |
+|:--------------| :------- |:---------------------------------|
+| `email`           | `string` | current email`REQUIRED`              |
+| `newPassword` | `string` | new password `REQUIRED`          |
 
 
 #### Activate user account
@@ -378,6 +443,16 @@ $ npm run start
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `userId`      | `string` | user ID`REQUIRED` |
+| `user`      | `UserEntity` | Admin/User must be logged in`REQUIRED` |
+
+#### Check if user is logged
+
+```http
+  GET /user/check
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
 | `user`      | `UserEntity` | Admin/User must be logged in`REQUIRED` |
 
 
@@ -487,8 +562,10 @@ $ npm run start
 ![img_19](https://user-images.githubusercontent.com/105069884/192586340-e684e7b2-cb58-4965-9c9c-5ba63e3d0396.png)
 
 ### 🧭 TODO
+✅ user panel - option to change user information
+
+✅ recover password method
 - product panel - filtering items by the options selected by user
-- user panel - option to change user information
 - unit testing
 - refactor code
 

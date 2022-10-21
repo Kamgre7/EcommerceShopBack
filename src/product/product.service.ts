@@ -105,11 +105,11 @@ export class ProductService {
   }
 
   async findAllProductByCategory(
-    categoryName: string,
+    categoryId: string,
   ): Promise<FindProductByCategoryResponse> {
     const category = await ProductCategoryEntity.findOne({
       where: {
-        name: Like(`%${categoryName}%`),
+        id: categoryId,
       },
     });
 
