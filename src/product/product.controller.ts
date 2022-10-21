@@ -78,11 +78,11 @@ export class ProductController {
     return this.productService.findBestSoldProduct();
   }
 
-  @Get('/category/:categoryName')
+  @Get('/category/:categoryId')
   findAllProductByCategory(
-    @Param('categoryName') categoryName: string,
+    @Param('categoryId') categoryId: string,
   ): Promise<FindProductByCategoryResponse> {
-    return this.productService.findAllProductByCategory(categoryName);
+    return this.productService.findAllProductByCategory(categoryId);
   }
 
   @Get('/find/:searchTerm')
