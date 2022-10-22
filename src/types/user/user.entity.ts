@@ -45,6 +45,7 @@ export interface UserInfoSuccessfulResponse {
   lastName: string;
   email: string;
   address: UserAddressInterface[];
+  role: UserRole;
 }
 
 export interface UserInfoFailedResponse {
@@ -78,4 +79,18 @@ export type UserDeleteAccount =
   | {
       isSuccess: false;
       message: string;
+    };
+
+export interface EditUserInfoResponse {
+  isSuccess: true;
+  message: string;
+}
+
+export type RecoverUserPwdResponse =
+  | {
+      isSuccess: boolean;
+      message: string;
+    }
+  | {
+      isSuccess: true;
     };

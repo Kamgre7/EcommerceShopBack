@@ -15,5 +15,6 @@ import { MailModule } from '../mail/mail.module';
   ],
   controllers: [CheckoutController],
   providers: [CheckoutService],
+  exports: [CheckoutService],
 })
 export class CheckoutModule {}

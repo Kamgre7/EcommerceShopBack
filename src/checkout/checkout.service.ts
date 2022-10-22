@@ -5,6 +5,7 @@ import {
   CheckoutOrderHistoryResponse,
   CheckoutPlaceOrderResponse,
   CheckoutTotalPriceResponse,
+  RemoveOrderHistoryResponse,
 } from '../types';
 import { UserEntity } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
@@ -127,5 +128,17 @@ export class CheckoutService {
     });
 
     return order ? orderFilter(order) : null;
+  }
+
+  async clearOrderHistory(
+    user: UserEntity,
+  ): Promise<RemoveOrderHistoryResponse> {
+    await OrderEntity.delete({
+      user: user.valueOf(),
+    });
+
+    return {
+      isSuccess: true,
+    };
   }
 }

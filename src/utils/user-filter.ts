@@ -28,7 +28,7 @@ export const userFilter = (user: UserEntity): RegisterUserResponse => {
 export const userInfoFilter = (
   user: UserEntity,
 ): UserInfoSuccessfulResponse => {
-  const { id, firstName, lastName, email } = user;
+  const { id, firstName, lastName, email, role } = user;
 
   return {
     id,
@@ -36,6 +36,7 @@ export const userInfoFilter = (
     lastName,
     email,
     address: userAddressFilter(user),
+    role,
   };
 };
 

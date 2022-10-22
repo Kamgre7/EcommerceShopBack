@@ -30,3 +30,7 @@ export interface CheckoutOrderHistoryResponse extends CheckoutInterface {
   address: UserAddressInterface;
   items: BasketFilterResponse[];
 }
+
+export type RemoveOrderHistoryResponse = {
+  isSuccess: true;
+};

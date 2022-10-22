@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Res,
   UploadedFiles,
@@ -18,6 +19,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { multerStorage, storageDir } from '../utils/storage';
 import {
   CreateProductResponse,
+  EditProductInfoResponse,
   FindProductByCategoryResponse,
   MulterDiskUploadedFiles,
   ProductFilterResponse,
@@ -28,6 +30,7 @@ import { ProductEntity } from './entities/product.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
+import { EditProductInfoDto } from './dto/edit-product-info.dto';
 
 @Controller('/product')
 export class ProductController {
@@ -56,6 +59,15 @@ export class ProductController {
     return this.productService.createNewProduct(createProductDto, files);
   }
 
+  @Patch('/edit')
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  editProductInfo(
+    @Body() editProductInfoDto: EditProductInfoDto,
+  ): Promise<EditProductInfoResponse> {
+    return this.productService.editProductInfo(editProductInfoDto);
+  }
+
   @Get('/')
   findAllProducts(): Promise<ProductFilterResponse[]> {
     return this.productService.findAllProducts();
@@ -66,11 +78,11 @@ export class ProductController {
     return this.productService.findBestSoldProduct();
   }
 
-  @Get('/category/:categoryName')
+  @Get('/category/:categoryId')
   findAllProductByCategory(
-    @Param('categoryName') categoryName: string,
+    @Param('categoryId') categoryId: string,
   ): Promise<FindProductByCategoryResponse> {
-    return this.productService.findAllProductByCategory(categoryName);
+    return this.productService.findAllProductByCategory(categoryId);
   }
 
   @Get('/find/:searchTerm')
@@ -85,18 +97,18 @@ export class ProductController {
     return this.productService.findOneProduct(id);
   }
 
-  @Delete('/:id')
-  @Roles([UserRole.ADMIN])
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
-    return this.productService.removeProduct(id);
-  }
-
   @Get('/photo/:productId')
   findProductPhoto(
     @Param('productId') productId: string,
     @Res() res: Response,
   ): Promise<void> {
     return this.productService.findProductPhoto(productId, res);
+  }
+
+  @Delete('/:id')
+  @Roles([UserRole.ADMIN])
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  removeProduct(@Param('id') id: string): Promise<RemoveProductResponse> {
+    return this.productService.removeProduct(id);
   }
 }

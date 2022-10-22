@@ -1,4 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { IsNull, Not } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { hashPassword, randomSalt } from '../utils/hash-password';
@@ -12,6 +13,9 @@ import {
 } from '../utils/user-filter';
 import {
   CreateUserAddressResponse,
+  EditUserInfoResponse,
+  LoginResponse,
+  RecoverUserPwdResponse,
   RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
@@ -19,28 +23,34 @@ import {
   UserEditPwdInterface,
   UserInfoResponse,
 } from '../types';
-import { BasketEntity } from '../basket/entities/basket.entity';
 import { MailService } from '../mail/mail.service';
 import { userActivationToken } from '../utils/user-activation-token';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
+import { BasketService } from '../basket/basket.service';
+import { CheckoutService } from '../checkout/checkout.service';
+import { EditUserInfoDto } from './dto/edit-user-info.dto';
+import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject(forwardRef(() => MailService))
     private mailService: MailService,
+    @Inject(forwardRef(() => BasketService))
+    private basketService: BasketService,
+    @Inject(forwardRef(() => CheckoutService))
+    private checkoutService: CheckoutService,
   ) {}
 
   private static async createUserAddress(
-    { city, address, country, mobilePhone, postalCode }: CreateUserAddressDto,
+    createUserAddress: CreateUserAddressDto,
     user: UserEntity,
   ) {
     const newUserAddress = new UserAddressEntity();
-    newUserAddress.address = address;
-    newUserAddress.city = city;
-    newUserAddress.country = country;
-    newUserAddress.mobilePhone = mobilePhone;
-    newUserAddress.postalCode = postalCode;
+
+    for (const [key, value] of Object.entries(createUserAddress)) {
+      newUserAddress[key] = value;
+    }
 
     await newUserAddress.save();
 
@@ -122,19 +132,41 @@ export class UserService {
         message: "You can't see another user profile",
       };
     }
+
     const userInfo = await UserEntity.findOne({
       where: {
         id: userId,
       },
       relations: ['address'],
     });
+
     return userInfoFilter(userInfo);
+  }
+
+  async checkIfUserLogged(user: UserEntity): Promise<LoginResponse | null> {
+    const userInfo = await UserEntity.findOne({
+      where: {
+        id: user.id,
+        currentTokenId: Not(IsNull()),
+      },
+    });
+
+    return userInfo
+      ? {
+          isSuccess: true,
+          id: userInfo.id,
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+          role: userInfo.role,
+        }
+      : null;
   }
 
   async findAllUsers(): Promise<UserInfoResponse[]> {
     const users = await UserEntity.find({
       relations: ['address'],
     });
+
     return users.map((user) => userInfoFilter(user));
   }
 
@@ -232,6 +264,61 @@ export class UserService {
     };
   }
 
+  async editUserInfo(
+    editUserInfo: EditUserInfoDto,
+    user: UserEntity,
+  ): Promise<EditUserInfoResponse> {
+    const userInfo = await UserEntity.findOne({
+      where: {
+        id: user.id,
+      },
+    });
+
+    for (const [key, value] of Object.entries(editUserInfo)) {
+      userInfo[key] = value;
+    }
+
+    userInfo.modifiedAt = new Date();
+    await userInfo.save();
+
+    return {
+      isSuccess: true,
+      message: 'User information updated successfully',
+    };
+  }
+
+  async recoverUserPassword(
+    recoverUserPwdDto: RecoverUserPwdDto,
+  ): Promise<RecoverUserPwdResponse> {
+    const { email, pwd } = recoverUserPwdDto;
+    const user = await UserEntity.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return {
+        isSuccess: false,
+        message: 'User not found',
+      };
+    }
+
+    if (!pwd) {
+      return { isSuccess: true };
+    }
+
+    user.pwdHash = hashPassword(pwd, user.pwdSalt);
+    user.modifiedAt = new Date();
+
+    await user.save();
+
+    return {
+      isSuccess: true,
+      message: 'Password changed successfully',
+    };
+  }
+
   async removeUser(
     userId: string,
     user: UserEntity,
@@ -243,15 +330,38 @@ export class UserService {
       };
     }
 
-    await BasketEntity.delete({
-      user: user.valueOf(),
-    });
+    let userToDelete: UserEntity | null = user;
+
+    if (userId !== user.id) {
+      userToDelete = await UserEntity.findOne({
+        where: {
+          id: userId,
+        },
+      });
+    }
+
+    if (userToDelete === null) {
+      return {
+        isSuccess: false,
+        message: "Can't find a user",
+      };
+    }
+
+    await this.basketService.clearBasket(userToDelete);
+    await this.checkoutService.clearOrderHistory(userToDelete);
 
     await UserAddressEntity.delete({
-      user: user.valueOf(),
+      user: userToDelete.valueOf(),
     });
 
-    await user.remove();
+    await userToDelete.remove();
+
+    await this.mailService.sendUserAccountDeletedMail(
+      userToDelete.email,
+      'Ecommerce - Deleted account confirmation',
+      userToDelete.firstName,
+      userToDelete.lastName,
+    );
 
     return { isSuccess: true };
   }

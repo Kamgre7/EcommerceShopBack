@@ -1,3 +1,5 @@
+import { UserRole } from '../user';
+
 export interface LoginFailedResponse {
   isSuccess: false;
   message: string;
@@ -5,8 +7,10 @@ export interface LoginFailedResponse {
 
 export interface LoginSuccessfulResponse {
   isSuccess: true;
-  userFirstName: string;
-  userId: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
 }
 
 export type LoginResponse = LoginFailedResponse | LoginSuccessfulResponse;

@@ -30,7 +30,6 @@ export interface ProductFilterResponse {
   description: string;
   sku: string;
   boughtCounter: number;
-  photoFileName: string;
 }
 
 export type CreateProductResponse =
@@ -48,3 +47,8 @@ export type FindProductByCategoryResponse =
       isSuccess: false;
       message: string;
     };
+
+export interface EditProductInfoResponse {
+  isSuccess: boolean;
+  message: string;
+}

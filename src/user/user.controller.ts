@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Patch,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,6 +17,11 @@ import { UserObj } from '../decorators/user-obj.decorator';
 import { UserEntity } from './entities/user.entity';
 import { Roles } from '../decorators/roles.decorator';
 import {
+  CreateUserAddressResponse,
+  EditUserInfoResponse,
+  LoginResponse,
+  RecoverUserPwdResponse,
+  RegisterUserResponse,
   UserActivationInterface,
   UserAddressInterface,
   UserDeleteAccount,
@@ -26,13 +32,17 @@ import {
 import { RolesGuard } from '../guards/roles.guard';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
+import { EditUserInfoDto } from './dto/edit-user-info.dto';
+import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/register')
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<RegisterUserResponse> {
     return this.userService.createUser(createUserDto);
   }
 
@@ -41,11 +51,20 @@ export class UserController {
   createUserAddress(
     @Body() createUserAddressDto: CreateUserAddressDto,
     @UserObj() user: UserEntity,
-  ) {
+  ): Promise<CreateUserAddressResponse> {
     return this.userService.createAdditionalUserAddress(
       createUserAddressDto,
       user,
     );
+  }
+
+  @Patch('/edit')
+  @UseGuards(AuthGuard('jwt'))
+  editUserInfo(
+    @UserObj() user: UserEntity,
+    @Body() editUserInfoDto: EditUserInfoDto,
+  ): Promise<EditUserInfoResponse> {
+    return this.userService.editUserInfo(editUserInfoDto, user);
   }
 
   @Patch('/edit/password')
@@ -55,6 +74,13 @@ export class UserController {
     @Body() editUserPwdDto: EditUserPwdDto,
   ): Promise<UserEditPwdInterface> {
     return this.userService.editUserPassword(editUserPwdDto, user);
+  }
+
+  @Put('/recover-password')
+  recoverUserPassword(
+    @Body() recoverUserPwdDto: RecoverUserPwdDto,
+  ): Promise<RecoverUserPwdResponse> {
+    return this.userService.recoverUserPassword(recoverUserPwdDto);
   }
 
   @Get('/activate/:token')
@@ -69,6 +95,14 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   findAllUsers(): Promise<UserInfoResponse[]> {
     return this.userService.findAllUsers();
+  }
+
+  @Get('/check')
+  @UseGuards(AuthGuard('jwt'))
+  checkIfUserLogged(
+    @UserObj() user: UserEntity,
+  ): Promise<LoginResponse | null> {
+    return this.userService.checkIfUserLogged(user);
   }
 
   @Get('/address/')

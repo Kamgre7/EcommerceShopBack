@@ -12,7 +12,6 @@ export const productFilter = (
     description,
     sku,
     boughtCounter,
-    photoFileName,
     category,
   } = product;
   const { quantity } = productInventory;
@@ -24,8 +23,7 @@ export const productFilter = (
     quantity,
     sku,
     boughtCounter,
-    photoFileName,
     description,
-    category: category.name,
+    category: category.id,
   };
 };
