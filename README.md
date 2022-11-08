@@ -565,6 +565,7 @@ $ npm run start
 ✅ user panel - option to change user information
 
 ✅ recover password method
+- add Swagger API documentation
 - product panel - filtering items by the options selected by user
 - unit testing
 - refactor code
