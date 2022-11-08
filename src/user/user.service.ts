@@ -42,7 +42,7 @@ export class UserService {
     private checkoutService: CheckoutService,
   ) {}
 
-  private static async createUserAddress(
+  private async createUserAddress(
     createUserAddress: CreateUserAddressDto,
     user: UserEntity,
   ) {
@@ -97,7 +97,7 @@ export class UserService {
     newUser.activationToken = userActivationToken(newUser.id);
     await newUser.save();
 
-    await UserService.createUserAddress(
+    await this.createUserAddress(
       { city, address, country, mobilePhone, postalCode },
       newUser,
     );
@@ -117,7 +117,7 @@ export class UserService {
     createUserAddressDto: CreateUserAddressDto,
     user: UserEntity,
   ): Promise<CreateUserAddressResponse> {
-    await UserService.createUserAddress(createUserAddressDto, user);
+    await this.createUserAddress(createUserAddressDto, user);
 
     return { isSuccess: true };
   }
