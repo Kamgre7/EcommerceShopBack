@@ -19,13 +19,13 @@ import { MailService } from '../mail/mail.service';
 export class CheckoutService {
   constructor(
     @Inject(forwardRef(() => BasketService))
-    private basketService: BasketService,
+    private readonly basketService: BasketService,
     @Inject(forwardRef(() => UserService))
-    private userService: UserService,
+    private readonly userService: UserService,
     @Inject(forwardRef(() => ProductService))
-    private productService: ProductService,
+    private readonly productService: ProductService,
     @Inject(forwardRef(() => MailService))
-    private mailService: MailService,
+    private readonly mailService: MailService,
   ) {}
 
   async placeOrder(

@@ -25,9 +25,9 @@ import { EditProductInfoDto } from './dto/edit-product-info.dto';
 export class ProductService {
   constructor(
     @Inject(forwardRef(() => CategoryService))
-    private categoryService: CategoryService,
+    private readonly categoryService: CategoryService,
     @Inject(forwardRef(() => BasketService))
-    private basketService: BasketService,
+    private readonly basketService: BasketService,
   ) {}
 
   async createNewProduct(

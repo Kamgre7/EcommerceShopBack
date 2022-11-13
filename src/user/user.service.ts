@@ -35,11 +35,11 @@ import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 export class UserService {
   constructor(
     @Inject(forwardRef(() => MailService))
-    private mailService: MailService,
+    private readonly mailService: MailService,
     @Inject(forwardRef(() => BasketService))
-    private basketService: BasketService,
+    private readonly basketService: BasketService,
     @Inject(forwardRef(() => CheckoutService))
-    private checkoutService: CheckoutService,
+    private readonly checkoutService: CheckoutService,
   ) {}
 
   private async createUserAddress(

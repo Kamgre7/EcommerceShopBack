@@ -17,7 +17,7 @@ import { UpdateBasketDto } from './dto/update-basket.dto';
 export class BasketService {
   constructor(
     @Inject(forwardRef(() => ProductService))
-    private productService: ProductService,
+    private readonly productService: ProductService,
   ) {}
 
   async addToBasket(
