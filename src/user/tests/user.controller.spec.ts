@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { v4 as uuid } from 'uuid';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { UserRole } from '../types';
-import { UserEntity } from './entities/user.entity';
+import { UserController } from '../user.controller';
+import { UserService } from '../user.service';
+import { UserRole } from '../../types';
+import { UserEntity } from '../entities/user.entity';
 
 const registerDto = {
   firstName: 'FirstName',
