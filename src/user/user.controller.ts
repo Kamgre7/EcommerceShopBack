@@ -34,12 +34,24 @@ import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
 import { EditUserInfoDto } from './dto/edit-user-info.dto';
 import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('User')
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/register')
+  @ApiCreatedResponse({
+    description: 'User id and mail as response',
+  })
+  @ApiBadRequestResponse({
+    description: 'User cannot register. Try again',
+  })
   createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<RegisterUserResponse> {
