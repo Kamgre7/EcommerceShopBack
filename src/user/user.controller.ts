@@ -8,10 +8,14 @@ import {
   UseGuards,
   Patch,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { CreateUserAddressDto } from './dto/create-user-address.dto';
+import { CreateUserDto, UserFilterResponseProp } from './dto/create-user.dto';
+import {
+  CreateUserAddressDto,
+  CreateUserAddressResponseProp,
+} from './dto/create-user-address.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserObj } from '../decorators/user-obj.decorator';
 import { UserEntity } from './entities/user.entity';
@@ -32,12 +36,18 @@ import {
 import { RolesGuard } from '../guards/roles.guard';
 import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
-import { EditUserInfoDto } from './dto/edit-user-info.dto';
+import {
+  EditUserInfoDto,
+  EditUserInfoResponseProp,
+} from './dto/edit-user-info.dto';
 import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -45,19 +55,34 @@ import {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('/register')
   @ApiCreatedResponse({
     description: 'User id and mail as response',
+    type: UserFilterResponseProp,
   })
   @ApiBadRequestResponse({
     description: 'User cannot register. Try again',
   })
+  @ApiBody({
+    type: CreateUserDto,
+    required: true,
+  })
+  @Post('/register')
   createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<RegisterUserResponse> {
     return this.userService.createUser(createUserDto);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: 'Is success: true/false',
+    type: CreateUserAddressResponseProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiBody({
+    type: CreateUserAddressDto,
+    required: true,
+  })
   @Post('/address/')
   @UseGuards(AuthGuard('jwt'))
   createUserAddress(
@@ -70,6 +95,16 @@ export class UserController {
     );
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: 'Is success user information changed',
+    type: EditUserInfoResponseProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiBody({
+    type: EditUserInfoDto,
+    required: true,
+  })
   @Patch('/edit')
   @UseGuards(AuthGuard('jwt'))
   editUserInfo(
@@ -145,6 +180,7 @@ export class UserController {
 
   @Delete('/:userId')
   @UseGuards(AuthGuard('jwt'))
+  @HttpCode(204)
   removeUser(
     @Param('userId') userId: string,
     @UserObj() user: UserEntity,

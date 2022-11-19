@@ -37,6 +37,16 @@ async function bootstrap() {
     .setTitle('Ecommerce Shop Backend API')
     .setDescription('Ecommerce Shop Backend API description')
     .setVersion('1.0')
+    .addCookieAuth(
+      'jwt',
+      {
+        type: 'http',
+        in: 'header',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'jwt',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

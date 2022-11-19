@@ -1,5 +1,6 @@
 import { IsInt, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { CreateUserAddressResponse, UserFilterResponse } from '../../types';
 
 export class CreateUserAddressDto {
   @IsString()
@@ -48,4 +49,11 @@ export class CreateUserAddressDto {
     example: 123456789,
   })
   mobilePhone: number;
+}
+
+export class CreateUserAddressResponseProp
+  implements CreateUserAddressResponse
+{
+  @ApiProperty()
+  isSuccess: boolean;
 }

@@ -1,5 +1,6 @@
 import { IsEmail, IsInt, IsString, Length, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserFilterResponse } from '../../types';
 
 export class CreateUserDto {
   @IsString()
@@ -87,4 +88,12 @@ export class CreateUserDto {
     example: '123456789',
   })
   mobilePhone: number;
+}
+
+export class UserFilterResponseProp implements UserFilterResponse {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  email: string;
 }
