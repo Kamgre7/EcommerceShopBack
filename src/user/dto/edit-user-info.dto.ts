@@ -1,5 +1,6 @@
 import { IsEmail, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { EditUserInfoResponse, UserFilterResponse } from '../../types';
 
 export class EditUserInfoDto {
   @IsString()
@@ -31,4 +32,12 @@ export class EditUserInfoDto {
     maxLength: 255,
   })
   email: string;
+}
+
+export class EditUserInfoResponseProp implements EditUserInfoResponse {
+  @ApiProperty()
+  isSuccess: true;
+
+  @ApiProperty()
+  message: string;
 }
