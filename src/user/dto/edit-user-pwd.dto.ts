@@ -1,5 +1,6 @@
 import { IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserEditPwdInterface } from '../../types';
 
 export class EditUserPwdDto {
   @IsString()
@@ -19,4 +20,12 @@ export class EditUserPwdDto {
     minLength: 6,
   })
   newPassword: string;
+}
+
+export class EditUserPwdResponseProp implements UserEditPwdInterface {
+  @ApiProperty()
+  isSuccess: boolean;
+
+  @ApiProperty()
+  message: string;
 }
