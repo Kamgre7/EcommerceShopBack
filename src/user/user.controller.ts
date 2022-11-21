@@ -34,18 +34,27 @@ import {
   UserRole,
 } from '../types';
 import { RolesGuard } from '../guards/roles.guard';
-import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
+import {
+  EditUserPwdDto,
+  EditUserPwdResponseProp,
+} from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
 import {
   EditUserInfoDto,
   EditUserInfoResponseProp,
 } from './dto/edit-user-info.dto';
-import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
+import {
+  RecoverUserPwdDto,
+  RecoverUserPwdResponseProp,
+} from './dto/recover-user-pwd.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCookieAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -114,6 +123,16 @@ export class UserController {
     return this.userService.editUserInfo(editUserInfoDto, user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: 'Is success user password changed',
+    type: EditUserPwdResponseProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiBody({
+    type: EditUserPwdDto,
+    required: true,
+  })
   @Patch('/edit/password')
   @UseGuards(AuthGuard('jwt'))
   editUserPassword(
@@ -123,6 +142,17 @@ export class UserController {
     return this.userService.editUserPassword(editUserPwdDto, user);
   }
 
+  @ApiCreatedResponse({
+    description: 'Is success user password changed',
+    type: RecoverUserPwdResponseProp,
+  })
+  @ApiBadRequestResponse({
+    description: 'Cannot recover password. Try again',
+  })
+  @ApiBody({
+    type: RecoverUserPwdDto,
+    required: true,
+  })
   @Put('/recover-password')
   recoverUserPassword(
     @Body() recoverUserPwdDto: RecoverUserPwdDto,
@@ -130,6 +160,19 @@ export class UserController {
     return this.userService.recoverUserPassword(recoverUserPwdDto);
   }
 
+  @ApiOkResponse({
+    description: 'Return true if activation confirmed',
+  })
+  @ApiBadRequestResponse({
+    description: 'Cannot activate user account. Try again',
+  })
+  @ApiParam({
+    name: 'token',
+    type: String,
+    example: '1rmnq348phrq',
+    description: 'Unique user activation token',
+    required: true,
+  })
   @Get('/activate/:token')
   activateUserAccount(
     @Param('token') token: string,
@@ -137,6 +180,13 @@ export class UserController {
     return this.userService.activateUserAccount(token);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: 'Return array of all users',
+    isArray: true,
+    type: '',
+  })
+  @ApiForbiddenResponse()
   @Get('/')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)

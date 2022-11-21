@@ -6,7 +6,6 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 
 export class RecoverUserPwdDto {
   @IsEmail()
@@ -28,4 +27,12 @@ export class RecoverUserPwdDto {
     minLength: 6,
   })
   pwd: string | undefined;
+}
+
+export class RecoverUserPwdResponseProp {
+  @ApiProperty()
+  isSuccess: boolean;
+
+  @ApiPropertyOptional()
+  message: string;
 }
