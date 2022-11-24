@@ -11,7 +11,6 @@ import { UserInterface, UserRole } from '../../types';
 import { UserAddressEntity } from './user-address.entity';
 import { BasketEntity } from '../../basket/entities/basket.entity';
 import { OrderEntity } from '../../checkout/entities/order.entity';
-import { v4 as uuid } from 'uuid';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()

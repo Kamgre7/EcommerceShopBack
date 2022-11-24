@@ -58,6 +58,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import {
+  LoginSuccessfulResponseProp,
+  UserActivationProp,
+  UserAddressProp,
+  UserDeleteAccountProp,
+  UserInfoResponseProp,
+} from './dto/user-props.dto';
 
 @ApiTags('User')
 @Controller('/user')
@@ -162,6 +169,7 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Return true if activation confirmed',
+    type: UserActivationProp,
   })
   @ApiBadRequestResponse({
     description: 'Cannot activate user account. Try again',
@@ -169,7 +177,7 @@ export class UserController {
   @ApiParam({
     name: 'token',
     type: String,
-    example: '1rmnq348phrq',
+    example: '1rmnq348phrqsad2423dsadsad',
     description: 'Unique user activation token',
     required: true,
   })
@@ -184,9 +192,12 @@ export class UserController {
   @ApiOkResponse({
     description: 'Return array of all users',
     isArray: true,
-    type: '',
+    type: UserInfoResponseProp,
   })
-  @ApiForbiddenResponse()
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiForbiddenResponse({
+    description: 'User must have admin role, to see all users',
+  })
   @Get('/')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -194,6 +205,12 @@ export class UserController {
     return this.userService.findAllUsers();
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: 'Return object of user information',
+    type: LoginSuccessfulResponseProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
   @Get('/check')
   @UseGuards(AuthGuard('jwt'))
   checkIfUserLogged(
@@ -202,6 +219,13 @@ export class UserController {
     return this.userService.checkIfUserLogged(user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: 'Return all user addresses',
+    isArray: true,
+    type: UserAddressProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
   @Get('/address/')
   @UseGuards(AuthGuard('jwt'))
   findUserAddress(
@@ -210,6 +234,20 @@ export class UserController {
     return this.userService.findUserAddress(user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: 'Return user address information',
+    type: UserAddressEntity,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiParam({
+    name: 'addressId',
+    type: String,
+    description: 'Unique user address id',
+    required: true,
+    format: 'uuid',
+    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+  })
   @Get('/address/:addressId')
   @UseGuards(AuthGuard('jwt'))
   findOneUserAddress(
@@ -219,6 +257,20 @@ export class UserController {
     return this.userService.findOneUserAddress(addressId, user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: 'Return user profile information',
+    type: UserInfoResponseProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Unique user id',
+    required: true,
+    format: 'uuid',
+    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+  })
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'))
   findOneUser(
@@ -228,6 +280,20 @@ export class UserController {
     return this.userService.findOneUser(user, userId);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: 'Return information about success of deleting account',
+    type: UserDeleteAccountProp,
+  })
+  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiParam({
+    name: 'userId',
+    type: String,
+    description: 'Unique user id',
+    required: true,
+    format: 'uuid',
+    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+  })
   @Delete('/:userId')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(204)
