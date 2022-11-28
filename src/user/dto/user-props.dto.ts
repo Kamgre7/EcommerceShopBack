@@ -1,6 +1,10 @@
 import {
+  CreateUserAddressResponse,
+  EditUserInfoResponse,
   LoginSuccessfulResponse,
   UserAddressInterface,
+  UserEditPwdInterface,
+  UserFilterResponse,
   UserInfoSuccessfulResponse,
   UserRole,
 } from '../../types';
@@ -80,6 +84,45 @@ export class LoginSuccessfulResponseProp implements LoginSuccessfulResponse {
     default: UserRole.USER,
   })
   role: UserRole;
+}
+
+export class CreateUserAddressResponseProp
+  implements CreateUserAddressResponse
+{
+  @ApiProperty()
+  isSuccess: boolean;
+}
+
+export class UserFilterResponseProp implements UserFilterResponse {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  email: string;
+}
+
+export class EditUserInfoResponseProp implements EditUserInfoResponse {
+  @ApiProperty()
+  isSuccess: true;
+
+  @ApiProperty()
+  message: string;
+}
+
+export class EditUserPwdResponseProp implements UserEditPwdInterface {
+  @ApiProperty()
+  isSuccess: boolean;
+
+  @ApiProperty()
+  message: string;
+}
+
+export class RecoverUserPwdResponseProp {
+  @ApiProperty()
+  isSuccess: boolean;
+
+  @ApiPropertyOptional()
+  message: string;
 }
 
 export class UserDeleteAccountProp {

@@ -1,13 +1,13 @@
 import { IsEmail, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { EditUserInfoResponse, UserFilterResponse } from '../../types';
+import { userApiInformation } from '../../utils/api-messages';
 
 export class EditUserInfoDto {
   @IsString()
   @Length(3, 25)
   @ApiProperty({
     type: String,
-    example: 'Hary',
+    example: userApiInformation.firstName,
     minLength: 3,
     maxLength: 25,
   })
@@ -17,7 +17,7 @@ export class EditUserInfoDto {
   @Length(3, 25)
   @ApiProperty({
     type: String,
-    example: 'Name',
+    example: userApiInformation.lastName,
     minLength: 3,
     maxLength: 25,
   })
@@ -27,17 +27,9 @@ export class EditUserInfoDto {
   @Length(3, 255)
   @ApiProperty({
     type: String,
-    example: 'newMail@example.com',
+    example: userApiInformation.email,
     minLength: 3,
     maxLength: 255,
   })
   email: string;
-}
-
-export class EditUserInfoResponseProp implements EditUserInfoResponse {
-  @ApiProperty()
-  isSuccess: true;
-
-  @ApiProperty()
-  message: string;
 }

@@ -11,11 +11,8 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UserFilterResponseProp } from './dto/create-user.dto';
-import {
-  CreateUserAddressDto,
-  CreateUserAddressResponseProp,
-} from './dto/create-user-address.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserAddressDto } from './dto/create-user-address.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserObj } from '../decorators/user-obj.decorator';
 import { UserEntity } from './entities/user.entity';
@@ -34,19 +31,10 @@ import {
   UserRole,
 } from '../types';
 import { RolesGuard } from '../guards/roles.guard';
-import {
-  EditUserPwdDto,
-  EditUserPwdResponseProp,
-} from './dto/edit-user-pwd.dto';
+import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
-import {
-  EditUserInfoDto,
-  EditUserInfoResponseProp,
-} from './dto/edit-user-info.dto';
-import {
-  RecoverUserPwdDto,
-  RecoverUserPwdResponseProp,
-} from './dto/recover-user-pwd.dto';
+import { EditUserInfoDto } from './dto/edit-user-info.dto';
+import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -59,10 +47,15 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
+  CreateUserAddressResponseProp,
+  EditUserInfoResponseProp,
+  EditUserPwdResponseProp,
   LoginSuccessfulResponseProp,
+  RecoverUserPwdResponseProp,
   UserActivationProp,
   UserAddressProp,
   UserDeleteAccountProp,
+  UserFilterResponseProp,
   UserInfoResponseProp,
 } from './dto/user-props.dto';
 import { userApiInformation, userApiMessage } from '../utils/api-messages';

@@ -1,13 +1,13 @@
 import { IsInt, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateUserAddressResponse, UserFilterResponse } from '../../types';
+import { userApiInformation } from '../../utils/api-messages';
 
 export class CreateUserAddressDto {
   @IsString()
   @Length(3, 255)
   @ApiProperty({
     type: String,
-    example: 'Street 11b',
+    example: userApiInformation.address,
     minLength: 3,
     maxLength: 255,
   })
@@ -17,7 +17,7 @@ export class CreateUserAddressDto {
   @Length(3, 255)
   @ApiProperty({
     type: String,
-    example: 'Warsaw',
+    example: userApiInformation.city,
     minLength: 3,
     maxLength: 255,
   })
@@ -27,7 +27,7 @@ export class CreateUserAddressDto {
   @Length(3, 10)
   @ApiProperty({
     type: String,
-    example: '44321',
+    example: userApiInformation.postalCode,
     minLength: 3,
     maxLength: 10,
   })
@@ -37,7 +37,7 @@ export class CreateUserAddressDto {
   @Length(3, 60)
   @ApiProperty({
     type: String,
-    example: 'Poland',
+    example: userApiInformation.country,
     minLength: 3,
     maxLength: 60,
   })
@@ -46,14 +46,7 @@ export class CreateUserAddressDto {
   @IsInt()
   @ApiProperty({
     type: Number,
-    example: 123456789,
+    example: userApiInformation.mobilePhone,
   })
   mobilePhone: number;
-}
-
-export class CreateUserAddressResponseProp
-  implements CreateUserAddressResponse
-{
-  @ApiProperty()
-  isSuccess: boolean;
 }
