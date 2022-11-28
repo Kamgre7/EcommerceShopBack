@@ -65,6 +65,7 @@ import {
   UserDeleteAccountProp,
   UserInfoResponseProp,
 } from './dto/user-props.dto';
+import { userApiInformation, userApiMessage } from '../utils/api-messages';
 
 @ApiTags('User')
 @Controller('/user')
@@ -72,11 +73,11 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiCreatedResponse({
-    description: 'User id and mail as response',
+    description: userApiMessage.createUser,
     type: UserFilterResponseProp,
   })
   @ApiBadRequestResponse({
-    description: 'User cannot register. Try again',
+    description: userApiMessage.createUserBadReq,
   })
   @ApiBody({
     type: CreateUserDto,
@@ -91,10 +92,12 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiCreatedResponse({
-    description: 'Is success: true/false',
+    description: userApiMessage.createUserAddress,
     type: CreateUserAddressResponseProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiBody({
     type: CreateUserAddressDto,
     required: true,
@@ -113,10 +116,12 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiCreatedResponse({
-    description: 'Is success user information changed',
+    description: userApiMessage.editUserInfo,
     type: EditUserInfoResponseProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiBody({
     type: EditUserInfoDto,
     required: true,
@@ -132,10 +137,12 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiCreatedResponse({
-    description: 'Is success user password changed',
+    description: userApiMessage.editUserPwd,
     type: EditUserPwdResponseProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiBody({
     type: EditUserPwdDto,
     required: true,
@@ -150,11 +157,11 @@ export class UserController {
   }
 
   @ApiCreatedResponse({
-    description: 'Is success user password changed',
+    description: userApiMessage.recoverUserPwd,
     type: RecoverUserPwdResponseProp,
   })
   @ApiBadRequestResponse({
-    description: 'Cannot recover password. Try again',
+    description: userApiMessage.recoverUserPwdBadReq,
   })
   @ApiBody({
     type: RecoverUserPwdDto,
@@ -168,17 +175,17 @@ export class UserController {
   }
 
   @ApiOkResponse({
-    description: 'Return true if activation confirmed',
+    description: userApiMessage.activateUserAccount,
     type: UserActivationProp,
   })
   @ApiBadRequestResponse({
-    description: 'Cannot activate user account. Try again',
+    description: userApiMessage.activateUserAccountBadReq,
   })
   @ApiParam({
     name: 'token',
     type: String,
-    example: '1rmnq348phrqsad2423dsadsad',
-    description: 'Unique user activation token',
+    example: userApiInformation.activationToken,
+    description: userApiMessage.uniqueUserToken,
     required: true,
   })
   @Get('/activate/:token')
@@ -190,13 +197,15 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiOkResponse({
-    description: 'Return array of all users',
+    description: userApiMessage.findAllUsers,
     isArray: true,
     type: UserInfoResponseProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiForbiddenResponse({
-    description: 'User must have admin role, to see all users',
+    description: userApiMessage.forbiddenUser,
   })
   @Get('/')
   @Roles([UserRole.ADMIN])
@@ -207,10 +216,12 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiOkResponse({
-    description: 'Return object of user information',
+    description: userApiMessage.checkIfUserLogged,
     type: LoginSuccessfulResponseProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @Get('/check')
   @UseGuards(AuthGuard('jwt'))
   checkIfUserLogged(
@@ -221,11 +232,13 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiOkResponse({
-    description: 'Return all user addresses',
+    description: userApiMessage.findUserAddress,
     isArray: true,
     type: UserAddressProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @Get('/address/')
   @UseGuards(AuthGuard('jwt'))
   findUserAddress(
@@ -236,17 +249,19 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiOkResponse({
-    description: 'Return user address information',
+    description: userApiMessage.findOneUserAddress,
     type: UserAddressEntity,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiParam({
     name: 'addressId',
     type: String,
-    description: 'Unique user address id',
+    description: userApiMessage.uniqueUserAddressId,
     required: true,
     format: 'uuid',
-    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+    example: userApiInformation.addressId,
   })
   @Get('/address/:addressId')
   @UseGuards(AuthGuard('jwt'))
@@ -259,17 +274,19 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiOkResponse({
-    description: 'Return user profile information',
+    description: userApiMessage.findOneUser,
     type: UserInfoResponseProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiParam({
     name: 'id',
     type: String,
-    description: 'Unique user id',
+    description: userApiMessage.uniqueUserId,
     required: true,
     format: 'uuid',
-    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+    example: userApiInformation.userId,
   })
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'))
@@ -282,17 +299,19 @@ export class UserController {
 
   @ApiCookieAuth('jwt')
   @ApiOkResponse({
-    description: 'Return information about success of deleting account',
+    description: userApiMessage.removeUser,
     type: UserDeleteAccountProp,
   })
-  @ApiUnauthorizedResponse({ description: 'You must be logged in' })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @ApiParam({
     name: 'userId',
     type: String,
-    description: 'Unique user id',
+    description: userApiMessage.uniqueUserId,
     required: true,
     format: 'uuid',
-    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+    example: userApiInformation.userId,
   })
   @Delete('/:userId')
   @UseGuards(AuthGuard('jwt'))
