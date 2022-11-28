@@ -1,11 +1,13 @@
 import { IsEmail, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { userApiInformation } from 'src/utils/api-messages';
+import { LogoutSuccessfulResponse } from '../../types';
 
 export class AuthLoginDto {
   @IsEmail()
   @ApiProperty({
     type: String,
-    example: 'email@example.com',
+    example: userApiInformation.email,
   })
   email: string;
 
@@ -13,7 +15,12 @@ export class AuthLoginDto {
   @Length(6, 25)
   @ApiProperty({
     type: String,
-    example: 'pwdExample123',
+    example: userApiInformation.password,
   })
   password: string;
+}
+
+export class LogoutSuccessfulResponseProp implements LogoutSuccessfulResponse {
+  @ApiProperty()
+  isSuccess: true;
 }
