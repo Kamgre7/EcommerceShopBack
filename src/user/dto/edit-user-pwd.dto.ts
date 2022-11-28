@@ -1,13 +1,13 @@
 import { IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEditPwdInterface } from '../../types';
+import { userApiInformation } from '../../utils/api-messages';
 
 export class EditUserPwdDto {
   @IsString()
   @MinLength(6)
   @ApiProperty({
     type: String,
-    example: 'currentPwd',
+    example: userApiInformation.password,
     minLength: 6,
   })
   currentPassword: string;
@@ -16,16 +16,8 @@ export class EditUserPwdDto {
   @MinLength(6)
   @ApiProperty({
     type: String,
-    example: 'newPwd',
+    example: userApiInformation.newPwd,
     minLength: 6,
   })
   newPassword: string;
-}
-
-export class EditUserPwdResponseProp implements UserEditPwdInterface {
-  @ApiProperty()
-  isSuccess: boolean;
-
-  @ApiProperty()
-  message: string;
 }

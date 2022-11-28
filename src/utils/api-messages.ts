@@ -16,14 +16,31 @@ export const userApiMessage = {
   removeUser: 'Return information about success of deleting account',
   uniqueUserToken: 'Unique user activation token',
   uniqueUserAddressId: 'Unique user address id',
+  uniqueHashedPwd: 'Hashed user password',
+  uniquePwdSalt: 'User random salt',
   uniqueUserId: 'Unique user id',
+  createdDate: 'When user was created',
+  updatedDate: 'When user was updated',
   forbiddenUser: 'User must have admin role, to see all users',
   unauthorizedUser: 'You must be logged in',
 };
 
 export const userApiInformation = {
+  firstName: 'John',
+  lastName: 'Stone',
+  email: 'john@example.com',
+  password: 'example123',
+  newPwd: 'newPwd123',
+  address: 'Baker Street 11a',
+  city: 'London',
+  postalCode: '11345',
+  country: 'England',
+  mobilePhone: 123456789,
   addressId: 'a05e7037-ebb8-418d-9653-797af68d5d01',
   userId: 'da0b7eda-43f0-448a-a2dd-36c2239d27cc',
+  currentTokenId: 'edfe341a-65fb-46a0-b6af-f4462c51b295',
+  hashedPwd:
+    'd6954dcf42ac0460c080fffba9f465022c9abc88726e9d507145f0cd6343df9fd7942e2428f20f5d78e61a43f17bac09f6db99670e6214b353d67c03168439c3',
   activationToken:
     '265a481545ff67f9b69a32183651ab4ae74e1e74d9d91dc9292d3835fe5aeb2fe153859954a5a01c2a3587584e6836a53e22d3b81fa7f2b871fc088bec8222da',
 };

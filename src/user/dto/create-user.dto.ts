@@ -1,13 +1,13 @@
 import { IsEmail, IsInt, IsString, Length, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserFilterResponse } from '../../types';
+import { userApiInformation } from '../../utils/api-messages';
 
 export class CreateUserDto {
   @IsString()
   @Length(3, 25)
   @ApiProperty({
     type: String,
-    example: 'John',
+    example: userApiInformation.firstName,
     minLength: 3,
     maxLength: 25,
   })
@@ -17,7 +17,7 @@ export class CreateUserDto {
   @Length(3, 25)
   @ApiProperty({
     type: String,
-    example: 'Example',
+    example: userApiInformation.lastName,
     minLength: 3,
     maxLength: 25,
   })
@@ -27,7 +27,7 @@ export class CreateUserDto {
   @Length(3, 255)
   @ApiProperty({
     type: String,
-    example: 'example@mail.com',
+    example: userApiInformation.email,
     minLength: 3,
     maxLength: 255,
   })
@@ -37,7 +37,7 @@ export class CreateUserDto {
   @MinLength(6)
   @ApiProperty({
     type: String,
-    example: 'userPwd123',
+    example: userApiInformation.password,
     minLength: 6,
   })
   password: string;
@@ -46,7 +46,7 @@ export class CreateUserDto {
   @Length(3, 255)
   @ApiProperty({
     type: String,
-    example: 'Street 1a',
+    example: userApiInformation.address,
     minLength: 3,
     maxLength: 255,
   })
@@ -56,7 +56,7 @@ export class CreateUserDto {
   @Length(3, 255)
   @ApiProperty({
     type: String,
-    example: 'London ',
+    example: userApiInformation.city,
     minLength: 3,
     maxLength: 255,
   })
@@ -66,7 +66,7 @@ export class CreateUserDto {
   @Length(3, 10)
   @ApiProperty({
     type: String,
-    example: '11123',
+    example: userApiInformation.postalCode,
     minLength: 3,
     maxLength: 10,
   })
@@ -76,7 +76,7 @@ export class CreateUserDto {
   @Length(3, 60)
   @ApiProperty({
     type: String,
-    example: 'England',
+    example: userApiInformation.country,
     minLength: 3,
     maxLength: 60,
   })
@@ -85,15 +85,7 @@ export class CreateUserDto {
   @IsInt()
   @ApiProperty({
     type: Number,
-    example: '123456789',
+    example: userApiInformation.mobilePhone,
   })
   mobilePhone: number;
-}
-
-export class UserFilterResponseProp implements UserFilterResponse {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  email: string;
 }

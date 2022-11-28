@@ -12,6 +12,7 @@ import { UserAddressEntity } from './user-address.entity';
 import { BasketEntity } from '../../basket/entities/basket.entity';
 import { OrderEntity } from '../../checkout/entities/order.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { userApiInformation, userApiMessage } from '../../utils/api-messages';
 
 @Entity()
 export class UserEntity extends BaseEntity implements UserInterface {
@@ -19,7 +20,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   @ApiProperty({
     type: String,
     format: 'uuid',
-    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+    example: userApiInformation.userId,
   })
   id: string;
 
@@ -28,7 +29,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   })
   @ApiProperty({
     type: String,
-    example: 'John',
+    example: userApiInformation.firstName,
   })
   firstName: string;
 
@@ -37,7 +38,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   })
   @ApiProperty({
     type: String,
-    example: 'Example',
+    example: userApiInformation.lastName,
   })
   lastName: string;
 
@@ -47,7 +48,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   })
   @ApiProperty({
     type: String,
-    example: 'example@mail.com',
+    example: userApiInformation.email,
   })
   email: string;
 
@@ -56,7 +57,8 @@ export class UserEntity extends BaseEntity implements UserInterface {
   })
   @ApiProperty({
     type: String,
-    description: 'Hashed user password',
+    description: userApiMessage.uniqueHashedPwd,
+    example: userApiInformation.hashedPwd,
   })
   pwdHash: string;
 
@@ -65,7 +67,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   })
   @ApiProperty({
     type: String,
-    description: 'User random salt',
+    description: userApiMessage.uniquePwdSalt,
   })
   pwdSalt: string;
 
@@ -76,7 +78,7 @@ export class UserEntity extends BaseEntity implements UserInterface {
   @ApiProperty({
     type: String,
     format: 'uuid',
-    example: 'a05e7037-ebb8-418d-9653-797af68d5d01',
+    example: userApiInformation.currentTokenId,
     default: null,
   })
   currentTokenId: string;
@@ -108,16 +110,20 @@ export class UserEntity extends BaseEntity implements UserInterface {
   @ApiProperty({
     type: String,
     nullable: true,
-    description: 'User activation token',
+    description: userApiMessage.uniqueUserToken,
   })
   activationToken: string;
 
   @CreateDateColumn()
-  @ApiProperty({ description: 'When user was created' })
+  @ApiProperty({
+    description: userApiMessage.createdDate,
+  })
   createdAt: Date;
 
   @UpdateDateColumn()
-  @ApiProperty({ description: 'When user was updated' })
+  @ApiProperty({
+    description: userApiMessage.updatedDate,
+  })
   modifiedAt: Date;
 
   @OneToMany(() => UserAddressEntity, (entity) => entity.user)
