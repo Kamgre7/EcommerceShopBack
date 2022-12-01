@@ -37,6 +37,13 @@ export const basketApiMessage = {
   uniqueBasketId: 'Unique basket id',
 };
 
+export const categoryApiMessage = {
+  createCategory: 'Return filtered information about category',
+  findAllCategories: 'Return all categories',
+  forbiddenUser: 'User must have admin role, to add category',
+  getAllCategoriesBadReq: 'Cannot find categories. Try again',
+};
+
 export const userApiInformation = {
   firstName: 'John',
   lastName: 'Stone',
@@ -65,6 +72,9 @@ export const basketApiInformation = {
 
 export const categoryApiInformation = {
   categoryId: '73acf845-6eef-4a7c-8598-dce70237d22a',
+  name: 'Accessories',
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
 };
 
 export const productApiInformation = {

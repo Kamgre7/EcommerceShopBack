@@ -25,11 +25,46 @@ import {
 import { ProductCategoryEntity } from './entities/category.entity';
 import { Roles } from '../decorators/roles.decorator';
 import { RolesGuard } from '../guards/roles.guard';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
+  ApiCookieAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import {
+  categoryApiInformation,
+  categoryApiMessage,
+  userApiMessage,
+} from '../utils/api-messages';
+import { CategoryFilterResponseProps } from './props/category.props';
+import { StorageObjectDto } from './dto/storage-object.dto';
 
+@ApiTags('Category')
 @Controller('/category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: categoryApiMessage.createCategory,
+    type: CategoryFilterResponseProps,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiForbiddenResponse({
+    description: categoryApiMessage.forbiddenUser,
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: StorageObjectDto,
+    required: true,
+  })
   @Post('/')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -53,6 +88,14 @@ export class CategoryController {
     return this.categoryService.createCategory(createCategoryDto, files);
   }
 
+  @ApiOkResponse({
+    description: categoryApiMessage.findAllCategories,
+    isArray: true,
+    type: CategoryFilterResponseProps,
+  })
+  @ApiBadRequestResponse({
+    description: categoryApiMessage.getAllCategoriesBadReq,
+  })
   @Get('/')
   findAllCategories(): Promise<CategoryFilterResponse[]> {
     return this.categoryService.findAllCategories();
