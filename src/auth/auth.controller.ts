@@ -18,7 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { LoginSuccessfulResponseProp } from '../user/dto/user-props.dto';
+import { LoginSuccessfulResponseProp } from '../user/props/user.props';
 import { userApiMessage } from 'src/utils/api-messages';
 
 @ApiTags('Login')

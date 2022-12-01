@@ -57,7 +57,7 @@ import {
   UserDeleteAccountProp,
   UserFilterResponseProp,
   UserInfoResponseProp,
-} from './dto/user-props.dto';
+} from './props/user.props';
 import { userApiInformation, userApiMessage } from '../utils/api-messages';
 
 @ApiTags('User')

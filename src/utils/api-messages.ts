@@ -28,6 +28,15 @@ export const userApiMessage = {
   unauthorizedUser: 'You must be logged in',
 };
 
+export const basketApiMessage = {
+  addToBasket: 'Return new basket id with is success information',
+  changeItemQuantity:
+    'Return is success information about changing item quantity in basket',
+  deleteBasket: 'Return information about success of deleting item in basket',
+  clearBasket: 'Remove all items from basket',
+  uniqueBasketId: 'Unique basket id',
+};
+
 export const userApiInformation = {
   firstName: 'John',
   lastName: 'Stone',
@@ -46,4 +55,26 @@ export const userApiInformation = {
     'd6954dcf42ac0460c080fffba9f465022c9abc88726e9d507145f0cd6343df9fd7942e2428f20f5d78e61a43f17bac09f6db99670e6214b353d67c03168439c3',
   activationToken:
     '265a481545ff67f9b69a32183651ab4ae74e1e74d9d91dc9292d3835fe5aeb2fe153859954a5a01c2a3587584e6836a53e22d3b81fa7f2b871fc088bec8222da',
+};
+
+export const basketApiInformation = {
+  basketId: '9b363e1e-a010-47f7-98c0-01374f52b705',
+  itemQuantity: 5,
+  updatedProductQuantity: 1,
+};
+
+export const categoryApiInformation = {
+  categoryId: '73acf845-6eef-4a7c-8598-dce70237d22a',
+};
+
+export const productApiInformation = {
+  productId: '1d3fae0f-891a-49a8-a483-3c421b0f63ac',
+  name: 'Lamp',
+  category: categoryApiInformation.categoryId,
+  price: 128,
+  quantity: 100,
+  description:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+  sku: 'A2B65',
+  boughtCounter: 4,
 };
