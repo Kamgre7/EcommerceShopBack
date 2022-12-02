@@ -40,8 +40,12 @@ export const basketApiMessage = {
 export const categoryApiMessage = {
   createCategory: 'Return filtered information about category',
   findAllCategories: 'Return all categories',
+  findSingleCategory: 'Return category by unique ID',
   forbiddenUser: 'User must have admin role, to add category',
   getAllCategoriesBadReq: 'Cannot find categories. Try again',
+  getSingleCategoryBadReq: 'Cannot find category. Try again',
+  getCategoryPhotoBadReq: 'Cannot find category photo. Try again',
+  uniqueCategoryId: 'Unique category id',
 };
 
 export const userApiInformation = {
@@ -75,6 +79,8 @@ export const categoryApiInformation = {
   name: 'Accessories',
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+  photoFileName: '1ed62061-7d63-4845-b812-1ef8fe6525df.jpeg',
+  dateNow: new Date(),
 };
 
 export const productApiInformation = {

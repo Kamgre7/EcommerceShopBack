@@ -33,6 +33,8 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
+  ApiParam,
+  ApiProduces,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -101,11 +103,42 @@ export class CategoryController {
     return this.categoryService.findAllCategories();
   }
 
+  @ApiOkResponse({
+    description: categoryApiMessage.findSingleCategory,
+    type: ProductCategoryEntity,
+  })
+  @ApiBadRequestResponse({
+    description: categoryApiMessage.getSingleCategoryBadReq,
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    example: categoryApiInformation.categoryId,
+    description: categoryApiMessage.uniqueCategoryId,
+    required: true,
+  })
   @Get('/:id')
   findOneCategory(@Param('id') id: string): Promise<ProductCategoryEntity> {
     return this.categoryService.findOneCategory(id);
   }
 
+  @ApiOkResponse({
+    schema: {
+      type: 'string',
+      format: 'binary',
+    },
+  })
+  @ApiProduces('image/*')
+  @ApiParam({
+    name: 'categoryId',
+    type: String,
+    example: categoryApiInformation.categoryId,
+    description: categoryApiMessage.uniqueCategoryId,
+    required: true,
+  })
+  @ApiBadRequestResponse({
+    description: categoryApiMessage.getCategoryPhotoBadReq,
+  })
   @Get('/photo/:categoryId')
   findCategoryPhoto(
     @Param('categoryId') categoryId: string,
