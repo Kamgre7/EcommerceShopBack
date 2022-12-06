@@ -43,7 +43,7 @@ import {
   categoryApiMessage,
   userApiMessage,
 } from '../utils/api-messages';
-import { CategoryFilterResponseProps } from './props/category.props';
+import { CategoryFilterResponseProp } from './props/category.props';
 import { StorageObjectDto } from './dto/storage-object.dto';
 
 @ApiTags('Category')
@@ -54,7 +54,7 @@ export class CategoryController {
   @ApiCookieAuth('jwt')
   @ApiCreatedResponse({
     description: categoryApiMessage.createCategory,
-    type: CategoryFilterResponseProps,
+    type: CategoryFilterResponseProp,
   })
   @ApiUnauthorizedResponse({
     description: userApiMessage.unauthorizedUser,
@@ -93,7 +93,7 @@ export class CategoryController {
   @ApiOkResponse({
     description: categoryApiMessage.findAllCategories,
     isArray: true,
-    type: CategoryFilterResponseProps,
+    type: CategoryFilterResponseProp,
   })
   @ApiBadRequestResponse({
     description: categoryApiMessage.getAllCategoriesBadReq,

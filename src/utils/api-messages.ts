@@ -40,12 +40,22 @@ export const basketApiMessage = {
 export const categoryApiMessage = {
   createCategory: 'Return filtered information about category',
   findAllCategories: 'Return all categories',
-  findSingleCategory: 'Return category by unique ID',
+  findSingleCategory: 'Return category found by unique ID',
   forbiddenUser: 'User must have admin role, to add category',
   getAllCategoriesBadReq: 'Cannot find categories. Try again',
   getSingleCategoryBadReq: 'Cannot find category. Try again',
   getCategoryPhotoBadReq: 'Cannot find category photo. Try again',
   uniqueCategoryId: 'Unique category id',
+};
+
+export const checkoutApiMessage = {
+  placeOrder: 'Return placing order response',
+  placeOrderConfirmation: 'Order was placed correctly',
+  findUserOrderHistory: 'Return all user orders',
+  findUserSingleOrder: 'Return user order found by unique ID',
+  uniqueOrderId: 'Unique order id',
+  totalPriceInfo:
+    'Returns information about order price, and how many items are with type',
 };
 
 export const userApiInformation = {
@@ -62,6 +72,9 @@ export const userApiInformation = {
   addressId: 'a05e7037-ebb8-418d-9653-797af68d5d01',
   userId: 'da0b7eda-43f0-448a-a2dd-36c2239d27cc',
   currentTokenId: 'edfe341a-65fb-46a0-b6af-f4462c51b295',
+  creditCard: '4024007150612892',
+  expDateCreditCart: '11/24',
+  cvcCreditCard: '915',
   hashedPwd:
     'd6954dcf42ac0460c080fffba9f465022c9abc88726e9d507145f0cd6343df9fd7942e2428f20f5d78e61a43f17bac09f6db99670e6214b353d67c03168439c3',
   activationToken:
@@ -93,4 +106,11 @@ export const productApiInformation = {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
   sku: 'A2B65',
   boughtCounter: 4,
+};
+
+export const checkoutApiInformation = {
+  orderId: '091ad79d-8aa0-49d8-9863-45d4d23b1587',
+  totalPrice: 4354.53,
+  totalItems: 8,
+  itemsType: 4,
 };
