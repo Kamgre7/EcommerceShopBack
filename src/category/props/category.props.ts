@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { categoryApiInformation } from '../../utils/api-messages';
 
-export class CategoryFilterResponseProps {
+export class CategoryFilterResponseProp {
   @ApiProperty({
     type: String,
     format: 'uuid',
