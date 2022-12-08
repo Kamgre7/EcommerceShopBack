@@ -2,53 +2,62 @@ import {
   CreateUserAddressResponse,
   EditUserInfoResponse,
   LoginSuccessfulResponse,
-  UserAddressInterface,
   UserEditPwdInterface,
   UserFilterResponse,
   UserInfoSuccessfulResponse,
   UserRole,
 } from '../../types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { userApiInformation, userApiMessage } from '../../utils/api-messages';
+import { CreateUserAddressDto } from '../dto/create-user-address.dto';
 
 export class UserActivationProp {
-  @ApiProperty()
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
   isSuccess: boolean;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiMessage.activateUserAccountResponse,
+  })
   message: string;
 }
 
-export class UserAddressProp implements UserAddressInterface {
-  @ApiProperty()
+export class UserAddressProp extends CreateUserAddressDto {
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    example: userApiInformation.addressId,
+  })
   id: string;
-
-  @ApiProperty()
-  address: string;
-
-  @ApiProperty()
-  city: string;
-
-  @ApiProperty()
-  postalCode: string;
-
-  @ApiProperty()
-  country: string;
-
-  @ApiProperty()
-  mobilePhone: number;
 }
 
 export class UserInfoResponseProp implements UserInfoSuccessfulResponse {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    example: userApiInformation.userId,
+  })
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.firstName,
+  })
   firstName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.lastName,
+  })
   lastName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.email,
+  })
   email: string;
 
   @ApiProperty({
@@ -69,13 +78,22 @@ export class LoginSuccessfulResponseProp implements LoginSuccessfulResponse {
   @ApiProperty()
   isSuccess: true;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.userId,
+  })
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.firstName,
+  })
   firstName: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.lastName,
+  })
   lastName: string;
 
   @ApiProperty({
@@ -89,15 +107,25 @@ export class LoginSuccessfulResponseProp implements LoginSuccessfulResponse {
 export class CreateUserAddressResponseProp
   implements CreateUserAddressResponse
 {
-  @ApiProperty()
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
   isSuccess: boolean;
 }
 
 export class UserFilterResponseProp implements UserFilterResponse {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    example: userApiInformation.userId,
+  })
   id: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.email,
+  })
   email: string;
 }
 
@@ -105,20 +133,32 @@ export class EditUserInfoResponseProp implements EditUserInfoResponse {
   @ApiProperty()
   isSuccess: true;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiMessage.EditUserInfoResponse,
+  })
   message: string;
 }
 
 export class EditUserPwdResponseProp implements UserEditPwdInterface {
-  @ApiProperty()
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
   isSuccess: boolean;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiMessage.editUserPwdResponse,
+  })
   message: string;
 }
 
 export class RecoverUserPwdResponseProp {
-  @ApiProperty()
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
   isSuccess: boolean;
 
   @ApiPropertyOptional()
@@ -126,9 +166,14 @@ export class RecoverUserPwdResponseProp {
 }
 
 export class UserDeleteAccountProp {
-  @ApiProperty()
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
   isSuccess: boolean;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    type: String,
+  })
   message: string;
 }

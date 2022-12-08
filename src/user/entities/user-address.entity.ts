@@ -10,6 +10,7 @@ import { UserAddressInterface } from '../../types';
 import { UserEntity } from './user.entity';
 import { OrderEntity } from '../../checkout/entities/order.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { userApiInformation } from '../../utils/api-messages';
 
 @Entity()
 export class UserAddressEntity
@@ -17,37 +18,56 @@ export class UserAddressEntity
   implements UserAddressInterface
 {
   @PrimaryGeneratedColumn('uuid')
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    example: userApiInformation.addressId,
+  })
   id: string;
 
   @Column({
     length: 255,
   })
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.address,
+  })
   address: string;
 
   @Column({
     length: 255,
   })
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.city,
+  })
   city: string;
 
   @Column({
     length: 10,
   })
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.postalCode,
+  })
   postalCode: string;
 
   @Column({
     length: 60,
   })
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: userApiInformation.country,
+  })
   country: string;
 
   @Column({
     type: 'int',
   })
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: userApiInformation.mobilePhone,
+  })
   mobilePhone: number;
 
   @ManyToOne(() => UserEntity, (entity) => entity.address)
