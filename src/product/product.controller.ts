@@ -31,11 +31,43 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../guards/roles.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { EditProductInfoDto } from './dto/edit-product-info.dto';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiCookieAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { productApiMessage, userApiMessage } from '../utils/api-messages';
+import {
+  EditProductDtoProp,
+  ProductFilterResponseProp,
+  StorageProductObjectDto,
+} from './props/product.props';
 
+@ApiTags('Product')
 @Controller('/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: productApiMessage.createProduct,
+    type: ProductFilterResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiForbiddenResponse({
+    description: userApiMessage.forbiddenUser,
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: StorageProductObjectDto,
+    required: true,
+  })
   @Post('/')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -59,6 +91,22 @@ export class ProductController {
     return this.productService.createNewProduct(createProductDto, files);
   }
 
+  //@TODO change reposnse value, description etc
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: productApiMessage.createProduct,
+    type: ProductFilterResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiForbiddenResponse({
+    description: userApiMessage.forbiddenUser,
+  })
+  @ApiBody({
+    type: EditProductDtoProp,
+    required: true,
+  })
   @Patch('/edit')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)
