@@ -61,6 +61,10 @@ export const checkoutApiMessage = {
     'Returns information about order price, and how many items are with type',
 };
 
+export const productApiMessage = {
+  createProduct: 'Return filtered information about product',
+};
+
 export const userApiInformation = {
   firstName: 'John',
   lastName: 'Stone',
