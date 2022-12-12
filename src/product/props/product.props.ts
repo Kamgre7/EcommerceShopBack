@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   categoryApiInformation,
   productApiInformation,
+  productApiMessage,
 } from '../../utils/api-messages';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { MulterDiskUploadedFiles } from '../../types';
@@ -74,4 +75,25 @@ export class EditProductDtoProp extends CreateProductDto {
     example: productApiInformation.category,
   })
   id: string;
+}
+
+export class EditProductInfoProp {
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
+  isSuccess: boolean;
+
+  @ApiProperty({
+    type: String,
+    example: productApiMessage.editProductInfoResponse,
+  })
+  message: string;
+}
+export class RemoveProductResponseProp {
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
+  isSuccess: boolean;
 }
