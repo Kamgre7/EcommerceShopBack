@@ -135,7 +135,7 @@ export class EditUserInfoResponseProp implements EditUserInfoResponse {
 
   @ApiProperty({
     type: String,
-    example: userApiMessage.EditUserInfoResponse,
+    example: userApiMessage.editUserInfoResponse,
   })
   message: string;
 }

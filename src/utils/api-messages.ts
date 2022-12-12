@@ -3,7 +3,7 @@ export const userApiMessage = {
   createUserBadReq: 'User cannot register. Try again',
   createUserAddress: 'Return information if success: true/false',
   editUserInfo: 'Is success user information changed',
-  EditUserInfoResponse: 'User information updated successfully',
+  editUserInfoResponse: 'User information updated successfully',
   editUserPwd: 'Is success user password changed',
   editUserPwdResponse: 'Password changed successfully',
   recoverUserPwd: 'Is success user password changed',
@@ -28,6 +28,7 @@ export const userApiMessage = {
   createdDate: 'When user was created',
   updatedDate: 'When user was updated',
   forbiddenUser: 'User must have admin role, to see all users',
+  forbiddenUserDeleteProduct: 'User must have admin role, to delete product',
   unauthorizedUser: 'You must be logged in',
 };
 
@@ -63,6 +64,25 @@ export const checkoutApiMessage = {
 
 export const productApiMessage = {
   createProduct: 'Return filtered information about product',
+  editProduct: 'Return if is success product information changed',
+  editProductInfoResponse: 'Product updated successfully',
+  findAllProducts: 'Return array of all products',
+  findAllProductsBadReq: 'Cannot find products. Try again',
+  findBestSoldProduct: 'Return array of three best sold products',
+  findBestSoldProductBadReq: 'Cannot find products. Try again',
+  findProductByCategory: 'Return array of products with this same category',
+  findProductByCategoryBadReq: 'Cannot find products. Try again',
+  findProductById: 'Return product information',
+  findProductByIdBadReq: 'Cannot find product. Try again',
+  findProductBySearchTerm: 'Return array of products with this same search',
+  findProductBySearchTermBadReq: 'Cannot find products. Try again',
+  searchTerm: 'User description of product name',
+  uniqueProductId: 'Unique product id',
+  createdDate: 'When product was created',
+  updatedDate: 'When product was updated',
+  photoFile: 'Return photo file (img) of product',
+  photoFileBadReq: 'Cannot find photo. Try again.',
+  removeProduct: 'Return information about success of deleting product',
 };
 
 export const userApiInformation = {
@@ -113,6 +133,8 @@ export const productApiInformation = {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
   sku: 'A2B65',
   boughtCounter: 4,
+  findBySearchTerm: 'lamp',
+  photoFileName: '4dbc509d-284f-4617-8eaa-caf401dca278.jpeg',
 };
 
 export const checkoutApiInformation = {
