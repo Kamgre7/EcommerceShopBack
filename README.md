@@ -17,6 +17,7 @@ application.
 - Mysql2
 - TypeORM
 - Handlebars
+- Swagger
 
 
 ### ✅ Requirements
