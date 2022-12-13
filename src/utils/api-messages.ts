@@ -1,12 +1,14 @@
 export const userApiMessage = {
   createUser: 'User id and mail as response',
   createUserBadReq: 'User cannot register. Try again',
-  createUserAddress: 'Return information if success: true/false',
+  createUserAddress:
+    'Return information if success: true/false of adding address',
   editUserInfo: 'Is success user information changed',
   editUserInfoResponse: 'User information updated successfully',
   editUserPwd: 'Is success user password changed',
   editUserPwdResponse: 'Password changed successfully',
   recoverUserPwd: 'Is success user password changed',
+  recoverUserPwdResponse: 'Password changed successfully',
   recoverUserPwdBadReq: 'Cannot recover password. Try again',
   activateUserAccount: 'Return true if activation confirmed',
   activateUserAccountResponse: 'User activation was successful',
@@ -83,6 +85,8 @@ export const productApiMessage = {
   photoFile: 'Return photo file (img) of product',
   photoFileBadReq: 'Cannot find photo. Try again.',
   removeProduct: 'Return information about success of deleting product',
+  forbiddenUserCreateProduct: 'User must have admin role, to add products',
+  forbiddenUserEditProduct: 'User must have admin role, to edit products',
 };
 
 export const userApiInformation = {

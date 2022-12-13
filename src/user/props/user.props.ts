@@ -161,7 +161,10 @@ export class RecoverUserPwdResponseProp {
   })
   isSuccess: boolean;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({
+    type: String,
+    example: userApiMessage.recoverUserPwdResponse,
+  })
   message: string;
 }
 
