@@ -8,6 +8,7 @@ import {
   UseGuards,
   Patch,
   Put,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -34,11 +35,47 @@ import { EditUserPwdDto } from './dto/edit-user-pwd.dto';
 import { UserAddressEntity } from './entities/user-address.entity';
 import { EditUserInfoDto } from './dto/edit-user-info.dto';
 import { RecoverUserPwdDto } from './dto/recover-user-pwd.dto';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCookieAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import {
+  CreateUserAddressResponseProp,
+  EditUserInfoResponseProp,
+  EditUserPwdResponseProp,
+  LoginSuccessfulResponseProp,
+  RecoverUserPwdResponseProp,
+  UserActivationProp,
+  UserAddressProp,
+  UserDeleteAccountProp,
+  UserFilterResponseProp,
+  UserInfoResponseProp,
+} from './props/user.props';
+import { userApiInformation, userApiMessage } from '../utils/api-messages';
 
+@ApiTags('User')
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiCreatedResponse({
+    description: userApiMessage.createUser,
+    type: UserFilterResponseProp,
+  })
+  @ApiBadRequestResponse({
+    description: userApiMessage.createUserBadReq,
+  })
+  @ApiBody({
+    type: CreateUserDto,
+    required: true,
+  })
   @Post('/register')
   createUser(
     @Body() createUserDto: CreateUserDto,
@@ -46,6 +83,18 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: userApiMessage.createUserAddress,
+    type: CreateUserAddressResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiBody({
+    type: CreateUserAddressDto,
+    required: true,
+  })
   @Post('/address/')
   @UseGuards(AuthGuard('jwt'))
   createUserAddress(
@@ -58,6 +107,18 @@ export class UserController {
     );
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: userApiMessage.editUserInfo,
+    type: EditUserInfoResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiBody({
+    type: EditUserInfoDto,
+    required: true,
+  })
   @Patch('/edit')
   @UseGuards(AuthGuard('jwt'))
   editUserInfo(
@@ -67,6 +128,18 @@ export class UserController {
     return this.userService.editUserInfo(editUserInfoDto, user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: userApiMessage.editUserPwd,
+    type: EditUserPwdResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiBody({
+    type: EditUserPwdDto,
+    required: true,
+  })
   @Patch('/edit/password')
   @UseGuards(AuthGuard('jwt'))
   editUserPassword(
@@ -76,6 +149,17 @@ export class UserController {
     return this.userService.editUserPassword(editUserPwdDto, user);
   }
 
+  @ApiCreatedResponse({
+    description: userApiMessage.recoverUserPwd,
+    type: RecoverUserPwdResponseProp,
+  })
+  @ApiBadRequestResponse({
+    description: userApiMessage.recoverUserPwdBadReq,
+  })
+  @ApiBody({
+    type: RecoverUserPwdDto,
+    required: true,
+  })
   @Put('/recover-password')
   recoverUserPassword(
     @Body() recoverUserPwdDto: RecoverUserPwdDto,
@@ -83,6 +167,20 @@ export class UserController {
     return this.userService.recoverUserPassword(recoverUserPwdDto);
   }
 
+  @ApiOkResponse({
+    description: userApiMessage.activateUserAccount,
+    type: UserActivationProp,
+  })
+  @ApiBadRequestResponse({
+    description: userApiMessage.activateUserAccountBadReq,
+  })
+  @ApiParam({
+    name: 'token',
+    type: String,
+    example: userApiInformation.activationToken,
+    description: userApiMessage.uniqueUserToken,
+    required: true,
+  })
   @Get('/activate/:token')
   activateUserAccount(
     @Param('token') token: string,
@@ -90,6 +188,18 @@ export class UserController {
     return this.userService.activateUserAccount(token);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: userApiMessage.findAllUsers,
+    isArray: true,
+    type: UserInfoResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiForbiddenResponse({
+    description: userApiMessage.forbiddenUser,
+  })
   @Get('/')
   @Roles([UserRole.ADMIN])
   @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -97,6 +207,14 @@ export class UserController {
     return this.userService.findAllUsers();
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: userApiMessage.checkIfUserLogged,
+    type: LoginSuccessfulResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @Get('/check')
   @UseGuards(AuthGuard('jwt'))
   checkIfUserLogged(
@@ -105,6 +223,15 @@ export class UserController {
     return this.userService.checkIfUserLogged(user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: userApiMessage.findUserAddress,
+    isArray: true,
+    type: UserAddressProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @Get('/address/')
   @UseGuards(AuthGuard('jwt'))
   findUserAddress(
@@ -113,6 +240,22 @@ export class UserController {
     return this.userService.findUserAddress(user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: userApiMessage.findOneUserAddress,
+    type: UserAddressEntity,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiParam({
+    name: 'addressId',
+    type: String,
+    description: userApiMessage.uniqueUserAddressId,
+    required: true,
+    format: 'uuid',
+    example: userApiInformation.addressId,
+  })
   @Get('/address/:addressId')
   @UseGuards(AuthGuard('jwt'))
   findOneUserAddress(
@@ -122,6 +265,22 @@ export class UserController {
     return this.userService.findOneUserAddress(addressId, user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: userApiMessage.findOneUser,
+    type: UserInfoResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: userApiMessage.uniqueUserId,
+    required: true,
+    format: 'uuid',
+    example: userApiInformation.userId,
+  })
   @Get('/:id')
   @UseGuards(AuthGuard('jwt'))
   findOneUser(
@@ -131,8 +290,25 @@ export class UserController {
     return this.userService.findOneUser(user, userId);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: userApiMessage.removeUser,
+    type: UserDeleteAccountProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiParam({
+    name: 'userId',
+    type: String,
+    description: userApiMessage.uniqueUserId,
+    required: true,
+    format: 'uuid',
+    example: userApiInformation.userId,
+  })
   @Delete('/:userId')
   @UseGuards(AuthGuard('jwt'))
+  @HttpCode(204)
   removeUser(
     @Param('userId') userId: string,
     @UserObj() user: UserEntity,

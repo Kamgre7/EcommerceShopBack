@@ -1,20 +1,20 @@
-import { IsString, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { categoryApiInformation } from '../../utils/api-messages';
 
-export class CreateCategoryDto {
-  @IsString()
-  @MinLength(3)
-  @MaxLength(25)
+export class CategoryFilterResponseProp {
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    example: categoryApiInformation.categoryId,
+  })
+  id: string;
+
   @ApiProperty({
     type: String,
     example: categoryApiInformation.name,
   })
   name: string;
 
-  @IsString()
-  @MinLength(3)
-  @MaxLength(1500)
   @ApiProperty({
     type: String,
     example: categoryApiInformation.description,
