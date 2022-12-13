@@ -499,27 +499,34 @@ $ npm run start
 ### 🛠 Example of API calls
 - user register
 
-![image](https://user-images.githubusercontent.com/105069884/192571379-59d2e5e1-2264-45cf-abc0-da28a609afab.png)
+![image](https://user-images.githubusercontent.com/105069884/207419343-235ee89b-0301-4852-84bd-9b6c3bb8efa1.png)
+
 
 - user account activation
 
-![img_4](https://user-images.githubusercontent.com/105069884/192585657-07dd51ac-4268-424f-af5b-62f6affb0652.png)
+![image](https://user-images.githubusercontent.com/105069884/207419663-1fc067c7-8ff8-42c1-b75e-13cb6316554e.png)
+
 
 - user login
 
-![img_5](https://user-images.githubusercontent.com/105069884/192585687-275ab654-9e9f-4354-9fc6-a78327a16021.png)
+![image](https://user-images.githubusercontent.com/105069884/207419118-1a6a1dac-de8f-4e04-b27d-a925b4103757.png)
+
 
 - change user password
 
-![img_6](https://user-images.githubusercontent.com/105069884/192585719-af249b85-abf5-47ae-98eb-d5199760f538.png)
+![image](https://user-images.githubusercontent.com/105069884/207419839-07048b7b-57bf-4ea8-ab5a-ba0449dc0cb9.png)
+
 
 - get product list
 
-![img_9](https://user-images.githubusercontent.com/105069884/192585811-7a622a3c-4126-40aa-9a4b-56af57652e28.png)
+![image](https://user-images.githubusercontent.com/105069884/207419955-8c393508-9e65-46b9-8b49-f794da70e4c8.png)
+
 
 - add product - admin required
 
-![img_10](https://user-images.githubusercontent.com/105069884/192585859-772d7270-c3f5-471d-ba64-6303f77d1baa.png)
+![image](https://user-images.githubusercontent.com/105069884/207420112-8fd1b4dc-93e9-4858-8d99-853805a1c553.png)
+![image](https://user-images.githubusercontent.com/105069884/207420197-8951c008-6484-4f5d-9ab3-49f97a2f76fb.png)
+
 
 - get category list
 
@@ -565,7 +572,8 @@ $ npm run start
 ✅ user panel - option to change user information
 
 ✅ recover password method
-- add Swagger API documentation
+
+✅ add Swagger API documentation
 - product panel - filtering items by the options selected by user
 - unit testing
 - refactor code
