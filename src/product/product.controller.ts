@@ -59,8 +59,6 @@ import {
   StorageProductObjectDto,
 } from './props/product.props';
 
-// @TODO change forbidden message info about category and rest of EP
-
 @ApiTags('Product')
 @Controller('/product')
 export class ProductController {
@@ -75,7 +73,7 @@ export class ProductController {
     description: userApiMessage.unauthorizedUser,
   })
   @ApiForbiddenResponse({
-    description: userApiMessage.forbiddenUser,
+    description: productApiMessage.forbiddenUserCreateProduct,
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -114,7 +112,7 @@ export class ProductController {
     description: userApiMessage.unauthorizedUser,
   })
   @ApiForbiddenResponse({
-    description: userApiMessage.forbiddenUser,
+    description: productApiMessage.forbiddenUserEditProduct,
   })
   @ApiBody({
     type: EditProductDtoProp,
