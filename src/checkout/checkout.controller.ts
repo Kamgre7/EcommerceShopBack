@@ -9,11 +9,43 @@ import {
   CheckoutPlaceOrderResponse,
   CheckoutTotalPriceResponse,
 } from '../types';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import {
+  checkoutApiInformation,
+  checkoutApiMessage,
+  userApiMessage,
+} from '../utils/api-messages';
+import {
+  CheckoutOrderHistoryResponseProp,
+  CheckoutPlaceOrderResponseProp,
+  CheckoutTotalPriceResponseProp,
+} from './props/checkout.props';
 
+@ApiTags('Checkout')
 @Controller('checkout')
 export class CheckoutController {
   constructor(private readonly checkoutService: CheckoutService) {}
 
+  @ApiCookieAuth('jwt')
+  @ApiCreatedResponse({
+    description: checkoutApiMessage.placeOrder,
+    type: CheckoutPlaceOrderResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiBody({
+    type: CreateCheckoutDto,
+    required: true,
+  })
   @Post('/order')
   @UseGuards(AuthGuard('jwt'))
   placeOrder(
@@ -23,6 +55,15 @@ export class CheckoutController {
     return this.checkoutService.placeOrder(createCheckoutDto, user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: checkoutApiMessage.findUserOrderHistory,
+    isArray: true,
+    type: CheckoutOrderHistoryResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @Get('/order/history')
   @UseGuards(AuthGuard('jwt'))
   orderHistory(
@@ -31,6 +72,21 @@ export class CheckoutController {
     return this.checkoutService.orderHistory(user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: checkoutApiMessage.findUserSingleOrder,
+    type: CheckoutOrderHistoryResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
+  @ApiParam({
+    name: 'orderId',
+    type: String,
+    example: checkoutApiInformation.orderId,
+    description: checkoutApiMessage.uniqueOrderId,
+    required: true,
+  })
   @Get('/order/history/:orderId')
   @UseGuards(AuthGuard('jwt'))
   singleOrderInfo(
@@ -40,6 +96,14 @@ export class CheckoutController {
     return this.checkoutService.singleOrderInfo(orderId, user);
   }
 
+  @ApiCookieAuth('jwt')
+  @ApiOkResponse({
+    description: checkoutApiMessage.totalPriceInfo,
+    type: CheckoutTotalPriceResponseProp,
+  })
+  @ApiUnauthorizedResponse({
+    description: userApiMessage.unauthorizedUser,
+  })
   @Get('/')
   @UseGuards(AuthGuard('jwt'))
   basketCheckout(
