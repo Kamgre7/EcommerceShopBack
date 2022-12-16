@@ -41,43 +41,41 @@ export class BasketService {
       };
     }
 
-    const items: BasketEntity[] = await BasketEntity.find({
+    const productAlreadyInBasket = await BasketEntity.findOne({
       where: {
         user: user.valueOf(),
+        product: product.valueOf(),
       },
       relations: ['product'],
     });
 
-    const existingProductBasket = items.find(
-      (itemActuallyInBasket) => itemActuallyInBasket.product.id === productId,
-    );
+    const sumBasketItemQuantity =
+      (productAlreadyInBasket?.quantity ?? 0) + quantity;
 
-    if (!!existingProductBasket) {
-      if (
-        product.productInventory.quantity <
-        existingProductBasket.quantity + quantity
-      ) {
-        return {
-          isSuccess: false,
-          message: 'Not enough stock quantity of product',
-        };
-      }
+    if (
+      !!productAlreadyInBasket &&
+      product.productInventory.quantity < sumBasketItemQuantity
+    ) {
+      return {
+        isSuccess: false,
+        message: 'Not enough stock quantity of product',
+      };
+    } else if (!!productAlreadyInBasket) {
+      productAlreadyInBasket.quantity += quantity;
+      await productAlreadyInBasket.save();
 
-      existingProductBasket.quantity += quantity;
-      await existingProductBasket.save();
-
-      return { isSuccess: true, id: existingProductBasket.id };
-    } else {
-      const basket = new BasketEntity();
-      basket.quantity = quantity;
-      await basket.save();
-
-      basket.product = product;
-      basket.user = user;
-      await basket.save();
-
-      return { isSuccess: true, id: basket.id };
+      return { isSuccess: true, id: productAlreadyInBasket.id };
     }
+
+    const basket = new BasketEntity();
+    basket.quantity = quantity;
+    await basket.save();
+
+    basket.product = product;
+    basket.user = user;
+    await basket.save();
+
+    return { isSuccess: true, id: basket.id };
   }
 
   async changeItemQuantity(
